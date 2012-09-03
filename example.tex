@@ -33,23 +33,36 @@
 
 \makeatother
 
+\title{Graphical Models in Tikz}
+% \author{Laura Dietz}
+
 \begin{document}
 
-\title{Graphical Models in Tikz}
-
-
-\author{Laura Dietz}
 
 \maketitle
-TikZ examples for graphical models. The directed factor graph notation
-is used in most figures, but it is possible to use the same macros to
-draw Bayesian networks.
+
+\begin{abstract}
+  TikZ examples for graphical models. The directed factor graph
+  notation is used in most figures, but it is possible to use the same
+  macros to draw Bayesian networks.
+\end{abstract}
 
 
 
 \section{Foundations}
 
-%
+\begin{figure}
+  \begin{center}
+    \begin{tikzpicture}
+      \node (x) [latent] {$X$};
+      \node (y) {$Y$};
+    \end{tikzpicture}
+  \end{center}
+  \caption{Graphical model of probabilistic ..}
+\end{figure}
+
+
+% 
 \begin{figure}[H]
 \noindent \begin{centering}
 \begin{tabular}{cc}
