@@ -11,52 +11,53 @@ Provides the following commands:
 
 * :code:`\plate`
 
-* \shiftedplate
+* :code:`\shiftedplate`
 
-* \twofactor
+* :code:`\twofactor`
 
-* \factor
+* :code:`\factor`
 
-* \nofactor
+* :code:`\nofactor`
 
-* \namedgate
+* :code:`\namedgate`
 
-* \gate
+* :code:`\gate`
 
-* \vertgate
+* :code:`\vertgate`
 
-* \vertgateSpec
+* :code:`\vertgateSpec`
 
-* \horgate
+* :code:`\horgate`
 
-* \horogate
+* :code:`\horogate`
 
-* \vertogate
+* :code:`\vertogate`
 
 Provides the following node styles:
 
-* latent
+* :code:`latent`
 
-* obs
+* :code:`obs`
 
-* const
+* :code:`const`
 
-* factor
+* :code:`factor`
 
 Usage
 -----
 
-How to install?
+Install the package bayesnet.sty to your LaTeX system or copy the file
+into projects that are using it.  To use the package in your LaTeX file
 
 .. code-block::
 
-   \usepackage{graphmod}
+   \usepackage{bayesnet}
 
 Compile the LaTeX example:
 
 .. code-block::
 
-   latexpdf example.tex
+   pdflatex example.tex
 
 and see the resulting PDF file example.pdf.
 
