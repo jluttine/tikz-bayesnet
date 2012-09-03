@@ -27,6 +27,16 @@ Provides the following commands:
 
 * \vertogate
 
+Provides the following node styles:
+
+* latent
+
+* obs
+
+* const
+
+* factor
+
 Copyright (C) 2010,2011 Laura Dietz
 Copyright (C) 2012 Jaakko Luttinen
 
