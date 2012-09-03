@@ -46,7 +46,7 @@ factor/.style={rectangle, fill=black,minimum size=5pt, inner sep=0pt},
 \node (invis#1) [draw, color=white, inner sep=1pt,rectangle,fit=#2] {};
 \end{pgfonlayer}\begin{pgfonlayer}{f}
 \node (capt#1) [ below left=0 pt of invis#1.south east, xshift=2pt,yshift=1pt] {\footnotesize{#3}};
-\node (#1) [draw,inner sep=1pt, rectangle,fit=(invis#1) (capt#1),#4] {};
+\node (#1) [draw,inner sep=7pt, rectangle,fit=(invis#1) (capt#1),#4] {};
 \end{pgfonlayer}
 }
 
