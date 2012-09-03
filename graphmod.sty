@@ -1,0 +1,159 @@
+% Copyright (C) ???? Laura Dietz
+% Copyright (C) 2012 Jaakko Luttinen
+
+% License here
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{graphmod}[2012/09/01 TikZ graphical models package]
+
+
+\RequirePackage{tikz}
+%\RequirePackage{tikz,tkz-base}
+
+\usetikzlibrary{shapes,decorations,shadows}
+\usetikzlibrary{decorations.pathmorphing}
+\usetikzlibrary{decorations.shapes}
+\usetikzlibrary{fadings}
+\usetikzlibrary{patterns}
+\usetikzlibrary{calc}
+\usetikzlibrary{decorations.text}
+\usetikzlibrary{decorations.footprints}
+\usetikzlibrary{decorations.fractals}
+\usetikzlibrary{shapes.gates.logic.IEC}
+\usetikzlibrary{shapes.gates.logic.US}
+\usetikzlibrary{fit,chains}
+\usetikzlibrary{positioning}
+\usepgflibrary{shapes}
+\usetikzlibrary{scopes}
+\usetikzlibrary{arrows}
+\usetikzlibrary{backgrounds}
+
+\tikzset{latent/.style={circle,fill=white,draw=black,inner sep=1pt, 
+minimum size=20pt, font=\fontsize{10}{10}\selectfont},
+obs/.style={latent,fill=gray!25},
+const/.style={rectangle, inner sep=0pt},
+factor/.style={rectangle, fill=black,minimum size=5pt, inner sep=0pt},
+>={triangle 45}}
+
+
+\pgfdeclarelayer{b}
+\pgfdeclarelayer{f}
+\pgfsetlayers{b,main,f}
+
+% shapename, fitlist, caption, pos
+\newcommand{\plate}[4]{
+\begin{pgfonlayer}{b}
+\node (invis#1) [draw, color=white, inner sep=1pt,rectangle,fit=#2] {};
+\end{pgfonlayer}\begin{pgfonlayer}{f}
+\node (capt#1) [ below left=0 pt of invis#1.south east, xshift=2pt,yshift=1pt] {\footnotesize{#3}};
+\node (#1) [draw,inner sep=1pt, rectangle,fit=(invis#1) (capt#1),#4] {};
+\end{pgfonlayer}
+}
+
+
+\newcommand{\shiftedplate}[5]{
+\begin{pgfonlayer}{b}
+\node (invis#1) [draw, color=white, inner sep=0 pt,rectangle,fit=#2] {};
+\end{pgfonlayer}\begin{pgfonlayer}{f}
+\node (capt#1) [#5, xshift=2pt] {\footnotesize{#3}};
+\node (#1) [draw,inner sep=2pt, rectangle,fit=(invis#1) (capt#1),#4] {};
+\end{pgfonlayer}
+}
+
+%shapename, pos, caption, in1, in2, out, captpos
+\newcommand{\twofactor}[7]{
+\node (#1) [factor] at #2 {};
+\node (capt#1) [#7 of #1]{\footnotesize{#3}};
+\draw [-] (#4) -- (#1) ;
+\draw [-] (#5) -- (#1) ;
+\draw [->,thick] (#1) -- (#6);
+}
+
+%shapename, pos, caption, in, out, captpos
+\newcommand{\factor}[6]{
+\node (#1) [factor] at #2 {};
+\node (capt#1) [#6 of #1]{\footnotesize{#3}};
+\draw [-] (#4) -- (#1) ;
+\draw [->,thick] (#1) -- (#5);
+}
+
+% name, --, caption, pos
+\newcommand{\nofactor}[4]{
+\node (#1) [factor, #2]  {};
+\node (capt#1) [#4 of #1]{\footnotesize{#3}};
+}
+
+%shapename,  fitlist, caption
+\newcommand{\namedgate}[3]{
+\begin{pgfonlayer}{b}
+\node (invisgate#1) [rectangle, draw, color=white,  fit=#2] {};
+\end{pgfonlayer}
+\node (gatecapt#1) [ above right=0 pt of invisgate#1.north west, xshift=-1pt ] {\footnotesize{#3}};
+\node (#1) [rectangle,draw,dashed, inner sep=2pt, fit=(invisgate#1)(gatecapt#1)]{};
+
+}
+
+%shapename,  fitlist, caption
+\newcommand{\gate}[3]{
+\node (#1) [rectangle,draw,dashed, inner sep=2pt, fit=#2]{};
+}
+
+%shapename,  fitlist1, fitlist2, caption1, caption2
+\newcommand{\vertgate}[5]{
+\begin{pgfonlayer}{b}
+\node (invisgateleft#1) [rectangle, draw, color=white,  fit=#2] {};
+\node (invisgateright#1) [rectangle, draw, color=white,  fit=#4] {};
+\end{pgfonlayer}
+\node (gatecaptleft#1) [ above left=0 pt of invisgateleft#1.north east, xshift=1pt ]{\footnotesize{#3}};
+\node (gatecaptright#1) [ above right=0 pt of invisgateright#1.north west, xshift=-1pt ] {\footnotesize{#5}};
+\node (#1) [rectangle,draw,dashed, inner sep=2pt, fit=(invisgateleft#1)(gatecaptleft#1)(invisgateright#1)(gatecaptright#1)]{};
+\draw [-, dashed] (#1.north) -- (#1.south);
+}
+
+
+\newcommand{\vertgateSpec}[5]{
+\begin{pgfonlayer}{b}
+\node (invisgateleft#1) [rectangle, draw, color=white,  fit=#2] {};
+\node (invisgateright#1) [rectangle, draw, color=white,  fit=#4] {};
+\end{pgfonlayer}
+\node (gatecaptleft#1) [ above left=0 pt of invisgateleft#1.north east, xshift=1pt ]{\footnotesize{#3}};
+\node (gatecaptright#1) [ above right=0 pt of invisgateright#1.north west, xshift=-1pt ] {\footnotesize{#5}};
+\node (#1) [rectangle,draw,dashed, inner sep=2pt, fit=(invisgateleft#1)(gatecaptleft#1)(invisgateright#1)(gatecaptright#1)]{};
+\draw [-, dashed] (#1.70) -- (#1.290);
+}
+
+\newcommand{\horgate}[5]{
+\begin{pgfonlayer}{b}
+\node (invisgateleft#1) [rectangle, draw, color=white,  fit=#2] {};
+\node (invisgateright#1) [rectangle, draw, color=white,  fit=#4] {};
+\end{pgfonlayer}
+\node (gatecaptleft#1) [ above right=0 pt of invisgateleft#1.south west, xshift=1pt ]{\footnotesize{#3}};
+\node (gatecaptright#1) [ below right=0 pt of invisgateright#1.north west, xshift=-1pt ] {\footnotesize{#5}};
+\node (#1) [rectangle,draw,dashed, inner sep=2pt, fit=(invisgateleft#1)(gatecaptleft#1)(invisgateright#1)(gatecaptright#1)]{};
+\draw [-, dashed] (#1.west) -- (#1.east);
+}
+
+\newcommand{\horogate}[5]{
+\begin{pgfonlayer}{b}
+\node (invisgateleft#1) [rectangle, draw, color=white,  fit=#2] {};
+\node (invisgateright#1) [rectangle, draw, color=white,  fit=#4] {};
+\end{pgfonlayer}
+\node (#1) [rectangle,draw,dashed, inner sep=2pt, fit=(invisgateleft#1)(invisgateright#1)]{};
+\node (gatecaptleft#1) [ above right=0 pt of #1.west, xshift=0pt ]{\footnotesize{#3}};
+\node (gatecaptright#1) [ below right=0 pt of #1.west, xshift=0pt ] {\footnotesize{#5}};
+
+\draw [-, dashed] (#1.west) -- (#1.east);
+}
+
+
+\newcommand{\vertogate}[5]{
+\begin{pgfonlayer}{b}
+\node (invisgateleft#1) [rectangle, draw, color=white,  fit=#2] {};
+\node (invisgateright#1) [rectangle, draw, color=white,  fit=#4] {};
+\end{pgfonlayer}
+\node (#1) [rectangle,draw,dashed, inner sep=2pt, fit=(invisgateleft#1)(invisgateright#1)]{};
+\node (gatecaptleft#1) [ below left=0 pt of #1.north, xshift=0pt ]{\footnotesize{#3}};
+\node (gatecaptright#1) [ below right=0 pt of #1.north, xshift=0pt ] {\footnotesize{#5}};
+
+\draw [-, dashed] (#1.north) -- (#1.south);
+}
