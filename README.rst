@@ -82,7 +82,7 @@ License
 -------
 
 | Copyright (C) 2010-2011 Laura Dietz
-| Copyright (C) 2012 Jaakko Luttinen
+| Copyright (C) 2012 Jaakko Luttinen jaakko.luttinen@aalto.fi
 
 This work may be distributed and/or modified under the conditions of
 the LaTeX Project Public License, either version 1.3 of this license

@@ -26,10 +26,103 @@
 
 \maketitle
 
-TikZ examples for graphical models (Bayesian networks) and factor
-graphs.
+TikZ examples for graphical models (Bayesian networks) and directed
+factor graphs.
+
+% A table of node types
+\begin{table}[ht]
+  \caption{Node types}
+  \begin{center}
+    \begin{tabular}{llc}
+      Type & Syntax & Output
+      \\
+      \hline
+      Latent variable &
+      \texttt{\textbackslash node[latent]} &
+      \tikz{\node[latent] {$x$};}
+      \\
+      Observed variable &
+      \texttt{\textbackslash node[obs]} &
+      \tikz{\node[obs] {$y$};}
+      \\
+      Constant &
+      \texttt{\textbackslash node[const]} &
+      \tikz{\node[const] {$a$};}
+      \\
+      Factor &
+      \texttt{\textbackslash node[factor]} &
+      \tikz{\node[factor] {}; }
+    \end{tabular}
+  \end{center}
+\end{table}
+
+% A table of node types
+\begin{table}[ht]
+  \caption{Node types}
+  \begin{center}
+    \begin{tabular}{llc}
+      Type & Command & Output
+      \\
+      \hline
+      Plate &
+      \texttt{\textbackslash plate} &
+      \tikz{
+        \node[latent] (x) {$x_m$};
+        \plate {} {(x)} {$\forall m \in \mathcal{M}$} {};
+      }
+      \\
+      Plate with freely located caption &
+      \texttt{\textbackslash shiftedplate} &
+      \tikz{
+        \node[latent] (x1) {$x_m$};
+        \shiftedplate {} {(x1)} {$\forall m \in \mathcal{M}$} {}
+        {yshift=1pt, above left = 2pt of x1.north east};
+      }
+      \\
+      Factor with no inputs nor outputs &
+      % What is the purpose of this command?
+      \texttt{\textbackslash nofactor} &
+      \tikz{
+        \nofactor {N} {} {$\mathcal{A}$} {above=1pt}
+      }
+      \\
+      Factor with one input &
+      \texttt{\textbackslash factor} &
+      \tikz{
+        \node[latent] (l) at (0,0) {$\lambda$};
+        \node[obs] (k) at (2,0) {$k$};
+        \factor {N} {(1,0)} {$\mathcal{P}$} {l} {k} {above=1pt}
+      }
+      \\
+      Factor with two inputs &
+      \texttt{\textbackslash twofactor} &
+      \tikz{
+        \node[latent] (mu) at (0,1) {$\mu$};
+        \node[latent] (tau) at (0,0) {$\tau$};
+        \node[obs] (x) at (2,0.5) {$x$};
+        \twofactor {N} {(1,0.5)} {$\mathcal{N}$} {mu} {tau} {x} {above=1pt}
+      }
+      \\
+      Gate &
+      % TODO: Add the input to the gate!
+      \texttt{\textbackslash namedgate} &
+      \tikz{
+        % Nodes
+        \node[latent] (l) at (0,3) {$\lambda$};
+        \node[latent] (p) at (1.5,1.5) {$\phi$};
+        \node[obs] (k) at (0,0) {$k$};
+        % Factor
+        %\nofactor {kf} {above=1 of k} {Multivariate} {above=1pt};
+        \factorexperimental {k-factor} {(0,1.5)} {Multinomial} {p} {k} {above}
+        % Gate
+        \newgate {k-gate} {(k-factor)(k-factor-caption)} {l};
+      }
+    \end{tabular}
+  \end{center}
+\end{table}
 
 
+% Simple Bayesian network
 \begin{figure}[ht]
   \begin{center}
     \begin{tikzpicture}
@@ -112,5 +205,116 @@ graphs.
 
 \end{figure}
 
+
+\begin{figure}[h]
+\begin{center}
+% Citation Influence
+\begin{tikzpicture}
+
+\matrix[row sep=4mm,column sep=10mm, matrix anchor=mid] (citinf) {
+&
+&[3mm] \node (psi) [latent] {$\gamma$};
+&[12mm,between origins] \node (balance) [latent] {$\lambda$};
+&[12mm,between origins] \node (innov) [latent] {$\psi$};
+\\
+
+&
+& \nofactor{drawf}{}{Multi}{left=0pt};
+&\nofactor{drawbalance}{}{Bern}{left=0pt};
+&
+\\
+
+\node (lambda) [latent] {$\theta$}; 
+&
+& \node (f) [latent]  {$C$}; 
+&\node (s) [latent]  {$S$}; 
+&
+\\
+
+\nofactor{drawtc}{}{Multi}{left=0pt};
+&
+& \nofactor{drawtd}{}{Multi}{above=0pt};\gate{gatetd}{(drawtd) (captdrawtd)}{$\mathcal{T}$};
+&
+&\nofactor{drawtdinnov}{}{Multi}{below=0pt};
+\\
+
+\node (tc) [latent]  {$T'$}; 
+&
+& \node (td) [latent]  {$T$}; 
+&
+&
+\\
+
+\nofactor{drawxc}{}{Multi}{above=0pt}; \gate{gatexc}{(drawxc) (captdrawxc)}{$t$};
+&  \node (phi) [latent]  {$\phi$};
+& \nofactor{drawxd}{}{Multi}{above=0pt}; \gate{gatexd}{(drawxd) (captdrawxd)}{$t$};
+&
+&
+\\
+
+\node (xc) [obs]  {$W'$}; 
+&
+&\node (xd) [obs]  {$W$}; 
+&
+&
+\\
+\\
+};
+
+\vertogate{gates}{(drawtd)(captdrawtd)}{$S=0$}{(drawtdinnov)(captdrawtdinnov)}{$S=1$};
+
+\nofactor{drawlambda}{above=8pt of lambda}{Dir}{right=0pt};
+\node (alphalambda) [const, above=10pt of drawlambda]  {$\alpha_{\theta}$};
+
+\nofactor{drawphi}{above=8pt of phi}{Dir}{right=0pt};
+\node (alphaphi) [const, above=10pt of drawphi]  {$\alpha_{\phi}$};
+
+\nofactor{drawpsi}{above=8pt of psi}{Dir}{left=0pt};
+\node (alphapsi) [const, above=18pt of drawpsi] {$\alpha_{\gamma}$}; 
+
+\nofactor{drawbalancep}{above=8pt of balance}{Beta}{left=0pt};
+\node (alphabalance1) [const, above left=18pt and 8 pt of drawbalancep] {$\alpha_{\lambda_{\theta}}$}; 
+\node (alphabalance2) [const, above right=18pt and 8 pt of drawbalancep] {$\alpha_{\lambda_{\psi}}$}; 
+
+\nofactor{drawinnovp}{above=8pt of innov}{Dir}{left=0pt};
+\node (alphainnov) [const, above=18pt of drawinnovp] {$\alpha_{\psi}$}; 
+
+\draw [->] (alphaphi) -- (drawphi) -- (phi);
+\draw [->] (alphalambda) -- (drawlambda) -- (lambda);
+\draw [->] (alphapsi) -- (drawpsi) -- (psi);
+\draw [->] (alphabalance1) -- (drawbalancep) -- (balance);
+\draw [-] (alphabalance2) -- (drawbalancep);
+\draw [->] (alphainnov) -- (drawinnovp) -- (innov);
+
+\draw [->] (psi) -- (drawf) -- (f);
+\draw [->] (lambda) -- (drawtc) -- (tc);
+\draw [->] (lambda) -- (drawtd) -- (td);
+\draw [->] (phi) -- (drawxc) -- (xc);
+\draw [->] (phi) -- (drawxd) -- (xd);
+\draw [->] (balance) -- (drawbalance) -- (s);
+\draw [->] (innov) -- (drawtdinnov) -- (td);
+
+
+\draw [-*] (tc) -- (gatexc);
+\draw [-*] (td) -- (gatexd);
+\draw [-*] (f) -- (gatetd);
+\draw [-*] (s) -- (gates);
+
+
+\plate{contentplatec}{(tc)(xc)(drawtc)(drawxc)(captdrawtc)(captdrawxc)(gatexc)}{$\forall w' \in c$}{}
+\plate{userplatec}{(contentplatec)(lambda)(drawlambda)(captdrawlambda)}{$\forall c \in \mathcal{C}$}{}
+\plate{contentplated}{(f)(td)(xd)(drawtd)(drawxd)(drawf)(captdrawtd)(captdrawxd)(captdrawf)(gatetd)(gatexd)(gates)(s)(drawbalance)}{$\forall w \in d$}{}
+\plate{userplated}{(contentplated)(psi)(drawpsi)(captdrawpsi)(balance)(drawbalance)(captdrawbalance)(innov)}{$\forall d \in \mathcal{D}$}{}
+
+\plate{topicplate}{(phi)(drawphi)(captdrawphi)}{$\forall t \in \mathcal{T}$}{}
+
+
+\end{tikzpicture}
+
+\end{center}
+
+\caption{Citation influence model with own topics as directed factor graph.\label{fig:Citinf-owntopics-model}}
+
+\end{figure}
 
 \end{document}
