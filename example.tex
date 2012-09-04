@@ -51,7 +51,7 @@ factor graphs.
       \\
       Factor &
       \texttt{\textbackslash node[factor]} &
-      \tikz{\node[factor] {}; }
+      \tikz{\node[factor,above] {}; }
     \end{tabular}
   \end{center}
 \end{table}
@@ -91,7 +91,7 @@ factor graphs.
       \tikz{
         \node[latent] (l) at (0,0) {$\lambda$};
         \node[obs] (k) at (2,0) {$k$};
-        \factor {N} {(1,0)} {$\mathcal{P}$} {l} {k} {above=1pt}
+        \factorexperimental {N} {(1,0)} {$\mathcal{P}$} {l} {k} {above}
       }
       \\
       Factor with two inputs &
@@ -113,7 +113,7 @@ factor graphs.
         \node[obs] (k) at (0,0) {$k$};
         % Factor
         %\nofactor {kf} {above=1 of k} {Multivariate} {above=1pt};
-        \factorexperimental {k-factor} {(0,1.5)} {Multinomial} {p} {k} {above}
+        \factorexperimental {k-factor} {(0,1.5)} {Multinomial} {p} {k} {above};
         % Gate
         \newgate {k-gate} {(k-factor)(k-factor-caption)} {l};
       }

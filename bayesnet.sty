@@ -81,8 +81,8 @@ factor/.style={rectangle, fill=black,minimum size=5pt, inner sep=0pt},
 
 %shapename, pos, caption, in, out, captpos
 \newcommand{\factorexperimental}[6]{
-\node [factor,#6] (#1) at #2 {\footnotesize{#3}};
-%\node (capt#1) [#6 of #1]{};
+\node [factor] (#1) at #2 {};
+\node (#1-caption) [#6] at #2 {\footnotesize{#3}};
 \draw [-] (#4) -- (#1) ;
 \draw [->,thick] (#1) -- (#5);
 }
@@ -118,7 +118,7 @@ factor/.style={rectangle, fill=black,minimum size=5pt, inner sep=0pt},
 
 % shapename,  fitlist, input
 \newcommand{\newgate}[3]{
-\node (#1) [rectangle,draw,dashed, inner sep=2pt, fit=#2]{};
+\node (#1) [rectangle,draw,dashed, inner sep=2pt, fit=#2] {};
 \draw [-*,thick] (#3) -- (#1);
 }
 
