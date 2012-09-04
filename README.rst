@@ -61,12 +61,28 @@ Compile the LaTeX example:
 
 and see the resulting PDF file example.pdf.
 
+Related projects
+----------------
+
+This package is derived from a technical report "Directed Factor Graph
+Notation for Generative Models" and the accompanying TikZ macros by
+Laura Dietz 2010 (http://people.cs.umass.edu/~dietz/).
+
+GraphViz (http://www.graphviz.org/) is a more general open source
+graph visualization software.  It uses DOT file format to describe the
+structure of the graph.  The DOT file can be converted to LaTeX using
+:code:`dot2tex` (http://www.fauskes.net/code/dot2tex/).
+
+UAI (http://graphmod.ics.uci.edu/uai08/FileFormat) is a simple text
+file format to describe Markov networks. The UAI file format can be
+converted to DOT file format using :code:`uai2dot`
+(https://github.com/drewfrank/uai2dot).
+
 License
 -------
 
-Copyright (C) 2010,2011 Laura Dietz
-
-Copyright (C) 2012 Jaakko Luttinen
+| Copyright (C) 2010-2011 Laura Dietz
+| Copyright (C) 2012 Jaakko Luttinen
 
 This work may be distributed and/or modified under the conditions of
 the LaTeX Project Public License, either version 1.3 of this license
