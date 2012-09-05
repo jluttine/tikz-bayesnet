@@ -112,26 +112,31 @@ factor/.style={rectangle, fill=black,minimum size=5pt, inner sep=0pt},
 }
 
 %shapename,  fitlist, caption
-\newcommand{\gate}[3]{
-\node (#1) [rectangle,draw,dashed, inner sep=2pt, fit=#2]{};
+\newcommand{\gate}[3]{ %
+  \node (#1) [rectangle,draw,dashed, inner sep=2pt, fit=#2]{};
 }
 
 % shapename,  fitlist, input
-\newcommand{\newgate}[3]{
-\node (#1) [rectangle,draw,dashed, inner sep=2pt, fit=#2] {};
-\draw [-*,thick] (#3) -- (#1);
+\newcommand{\newgate}[3]{ %
+  \node (#1) [rectangle,draw,dashed, inner sep=2pt, fit=#2] {}; %
+  \draw [-*,thick] (#3) -- (#1); %
 }
 
 %shapename,  fitlist1, fitlist2, caption1, caption2
 \newcommand{\vertgate}[5]{
-\begin{pgfonlayer}{b}
-\node (invisgateleft#1) [rectangle, draw, color=white,  fit=#2] {};
-\node (invisgateright#1) [rectangle, draw, color=white,  fit=#4] {};
-\end{pgfonlayer}
-\node (gatecaptleft#1) [ above left=0 pt of invisgateleft#1.north east, xshift=1pt ]{\footnotesize{#3}};
-\node (gatecaptright#1) [ above right=0 pt of invisgateright#1.north west, xshift=-1pt ] {\footnotesize{#5}};
-\node (#1) [rectangle,draw,dashed, inner sep=2pt, fit=(invisgateleft#1)(gatecaptleft#1)(invisgateright#1)(gatecaptright#1)]{};
-\draw [-, dashed] (#1.north) -- (#1.south);
+  \begin{pgfonlayer}{b}
+    \node (invisgateleft#1) [rectangle, draw, color=white, fit=#2]
+    {}; %
+    \node (invisgateright#1) [rectangle, draw, color=white, fit=#4]
+    {}; %
+  \end{pgfonlayer}
+  \node (gatecaptleft#1) [ above left=0 pt of invisgateleft#1.north
+  east, xshift=1pt ]{\footnotesize{#3}} ; %
+  \node (gatecaptright#1) [ above right=0 pt of invisgateright#1.north
+  west, xshift=-1pt ] {\footnotesize{#5}}; %
+  \node (#1) [rectangle,draw,dashed, inner sep=2pt,
+  fit=(invisgateleft#1)(gatecaptleft#1)(invisgateright#1)(gatecaptright#1)]{}; %
+  \draw [-, dashed] (#1.north) -- (#1.south); %
 }
 
 
