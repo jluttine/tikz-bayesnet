@@ -1,28 +1,15 @@
-%% bayesnet.sty
-%% Copyright (C) 2010,2011 Laura Dietz
-%% Copyright (C) 2012 Jaakko Luttinen
+% Copyright 2012 by Jaakko Luttinen
 %
-% This work may be distributed and/or modified under the conditions of
-% the LaTeX Project Public License, either version 1.3 of this license
-% or (at your option) any later version.  The license is in the file
-% LICENSE and the latest version of this license is in
-% http://www.latex-project.org/lppl.txt and version 1.3 or later is
-% part of all distributions of LaTeX version 2005/12/01 or later.
+% This file may be distributed and/or modified
 %
-% This work has the LPPL maintenance status `maintained'.
-% 
-% The Current Maintainer of this work is Jaakko Luttinen.
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Public License.
 %
-% This work consists of the files bayesnet.sty and example.tex.
+% See the file doc/generic/pgf/licenses/LICENSE for more details.
 
+% \ProvidesFileRCS[v\pgfversion] $Header: /cvsroot/pgf/pgf/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarybayesnet.code.tex,v 0.1 2012/09/14 10:30:36 tantau Exp $
 
-%/usr/share/texmf/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryautomata.code.tex
-
-\NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{bayesnet}[2012/09/01 TikZ graphical models package]
-
-\RequirePackage{tikz}
-
+% Load other libraries
 \usetikzlibrary{shapes,decorations,shadows}
 \usetikzlibrary{decorations.pathmorphing}
 \usetikzlibrary{decorations.shapes}
@@ -41,20 +28,30 @@
 \usetikzlibrary{arrows}
 \usetikzlibrary{backgrounds}
 
-\tikzset{ %
-  latent/.style={circle,fill=white,draw=black,inner sep=1pt, minimum
-    size=20pt, font=\fontsize{10}{10}\selectfont}, %
-  obs/.style={latent,fill=gray!25}, const/.style={rectangle, inner
-    sep=0pt}, %
-  factor/.style={rectangle, fill=black,minimum size=5pt, inner
-    sep=0pt}, %
-  >={triangle 45}%
-}
+% Latent node
+\tikzstyle{latent} = [circle,fill=white,draw=black,inner sep=1pt,
+minimum size=20pt, font=\fontsize{10}{10}\selectfont]
+% Observed node
+\tikzstyle{obs} = [latent,fill=gray!25]
+% Constant node
+\tikzstyle{const} = [rectangle, inner sep=0pt]
+% Factor node
+\tikzstyle{factor} = [rectangle, fill=black,minimum size=5pt, inner
+sep=0pt, node distance=15pt]
+% Caption node?
+%\tikzstyle{caption} = [node distance=2pt]
 
+\tikzset{plates/.code={\text{Hello world!}}}
+
+% Plate node
+\tikzstyle{plate} = [draw, rectangle]
+
+\tikzset{>={triangle 45}}
 
 \pgfdeclarelayer{b}
 \pgfdeclarelayer{f}
 \pgfsetlayers{b,main,f}
+
 
 % shapename, fitlist, caption, pos
 \newcommand{\plate}[4]{ %
@@ -216,3 +213,112 @@
   {\footnotesize{#5}}; %
   \draw [-, dashed] (#1.north) -- (#1.south); %
 }
+
+\endinput
+
+% \tikzset{ %
+%   latent/.style={circle,fill=white,draw=black,inner sep=1pt, minimum
+%     size=20pt, font=\fontsize{10}{10}\selectfont}, %
+%   obs/.style={latent,fill=gray!25}, %
+%   const/.style={rectangle, inner sep=0pt}, %
+%   factor/.style={rectangle, fill=black,minimum size=5pt, inner
+%     sep=0pt}, %
+%   >={triangle 45}%
+% }
+
+
+
+% Styles for states:
+
+\usetikzlibrary{shapes.multipart}
+
+\tikzstyle{every state}=           []
+
+\tikzstyle{state without output}=  [circle,draw,minimum size=2.5em,every state]
+\tikzstyle{state with output}=     [circle split,draw,minimum size=2.5em,every state]
+
+\tikzstyle{accepting by arrow}=    [after node path=
+{
+  {
+    [to path=
+    {
+      [->,double=none,every accepting by arrow]
+      --
+      ([shift=(\tikz@accepting@angle:\tikz@accepting@distance)]\tikztostart.\tikz@accepting@angle)
+          node [shape=rectangle,anchor=\tikz@accepting@anchor] {\tikz@accepting@text}
+      }]
+    edge ()
+  }
+}]
+\tikzstyle{every accepting by arrow}=[]
+\tikzstyle{accepting by double}= [double,outer sep=.5\pgflinewidth+.3pt] % .3pt is half double width distance
+
+\tikzstyle{initial by arrow}=   [after node path=
+{
+  {
+    [to path=
+    {
+      [->,double=none,every initial by arrow]
+      ([shift=(\tikz@initial@angle:\tikz@initial@distance)]\tikztostart.\tikz@initial@angle)
+          node [shape=rectangle,anchor=\tikz@initial@anchor] {\tikz@initial@text}
+        -- (\tikztostart)}]
+    edge ()
+  }
+}]
+\tikzstyle{every initial by arrow}=[]
+
+\tikzstyle{initial by diamond}=[shape=diamond]
+
+
+\tikzoption{initial text}{\tikzaddafternodepathoption{\def\tikz@initial@text{#1}}}
+\tikzoption{accepting text}{\tikzaddafternodepathoption{\def\tikz@accepting@text{#1}}}
+
+\tikzoption{initial where}{\tikzaddafternodepathoption{\csname tikz@initial@compute@#1\endcsname}}
+\tikzoption{accepting where}{\tikzaddafternodepathoption{\csname tikz@accepting@compute@#1\endcsname}}
+
+\tikzoption{initial distance}{\tikzaddafternodepathoption{\def\tikz@initial@distance{#1}}}
+\tikzoption{accepting distance}{\tikzaddafternodepathoption{\def\tikz@accepting@distance{#1}}}
+
+\def\tikz@initial@text{start}
+\def\tikz@accepting@text{}
+
+\def\tikz@initial@distance{3ex}
+\def\tikz@accepting@distance{3ex}
+
+\def\tikz@initial@compute@above{\def\tikz@initial@angle{90}\def\tikz@initial@anchor{south}}
+\def\tikz@initial@compute@below{\def\tikz@initial@angle{270}\def\tikz@initial@anchor{north}}
+\def\tikz@initial@compute@left{\def\tikz@initial@angle{180}\def\tikz@initial@anchor{east}}
+\def\tikz@initial@compute@right{\def\tikz@initial@angle{0}\def\tikz@initial@anchor{west}}
+
+\def\tikz@initial@angle{180}
+\def\tikz@initial@anchor{east}
+
+\def\tikz@accepting@compute@above{\def\tikz@accepting@angle{90}\def\tikz@accepting@anchor{south}}
+\def\tikz@accepting@compute@below{\def\tikz@accepting@angle{270}\def\tikz@accepting@anchor{north}}
+\def\tikz@accepting@compute@left{\def\tikz@accepting@angle{180}\def\tikz@accepting@anchor{east}}
+\def\tikz@accepting@compute@right{\def\tikz@accepting@angle{0}\def\tikz@accepting@anchor{west}}
+
+\def\tikz@accepting@angle{0}
+\def\tikz@accepting@anchor{west}
+
+
+\tikzstyle{initial above}=        [initial by arrow,initial where=above]
+\tikzstyle{initial below}=        [initial by arrow,initial where=below]
+\tikzstyle{initial left}=         [initial by arrow,initial where=left]
+\tikzstyle{initial right}=        [initial by arrow,initial where=right]
+
+\tikzstyle{accepting above}=      [accepting by arrow,accepting where=above]
+\tikzstyle{accepting below}=      [accepting by arrow,accepting where=below]
+\tikzstyle{accepting left}=       [accepting by arrow,accepting where=left]
+\tikzstyle{accepting right}=      [accepting by arrow,accepting where=right]
+
+
+% Defaults:
+
+\tikzstyle{state}=                [state without output]
+\tikzstyle{accepting}=            [accepting by double]
+\tikzstyle{initial}=              [initial by arrow]
+
+
+
+\endinput

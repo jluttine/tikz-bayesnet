@@ -17,7 +17,9 @@
 
 \documentclass[a4paper]{article}
 
-\usepackage{bayesnet}
+%\usepackage{bayesnet}
+\usepackage{tikz}
+\usetikzlibrary{bayesnet}
 
 \title{Graphical Models in Tikz}
 \author{Laura Dietz, Jaakko Luttinen}
@@ -51,7 +53,17 @@ factor graphs.
       \\
       Factor &
       \texttt{\textbackslash node[factor]} &
-      \tikz{\node[factor,above] {}; }
+      \tikz{\node[factor] [label=$\mathcal{N}$] {}; }
+      \\
+      Plate &
+      \tikz{
+        %\node[latent] (x) {$x_m$};
+        %\node[fit=(x), label={[name=plate-label]right below:n in N}] (plate) {};
+        %\node[draw, fit=(plate)(plate-label)] {};
+        %\node[plate, fit=(x)] (plate) {n in N};
+        %\node[plates] {testi} ;
+        %\node[plate, fit=(x), label=n in N] {}; %{$\forall m \in \mathcal{M}$};
+      }
     \end{tabular}
   \end{center}
 \end{table}
@@ -77,6 +89,21 @@ factor graphs.
         \node[latent] (x1) {$x_m$};
         \shiftedplate {} {(x1)} {$\forall m \in \mathcal{M}$} {}
         {yshift=1pt, above left = 2pt of x1.north east};
+      }
+      \\
+      Factor &
+      \texttt{\textbackslash node[factor]} &
+      \tikz{
+        % Nodes
+        \node[obs]    (x)   at (2,0.5)   {$x$};
+        \node[latent] (mu)  at (0,1)     {$\mu$};
+        \node[latent] (tau) at (0,0)     {$\tau$};
+        % Factors
+        %\node[factor] (f) [left=of x, label={[name=f-caption]above:$\mathcal{N}$}] {}; %
+        \node[factor] (f) [left=of x, label=$\mathcal{N}$] {}; %
+        % Draw arrows
+        \draw[<-] (x) -- (f) edge[-] (mu)
+                             edge[-] (tau);
       }
       \\
       Factor with no inputs nor outputs &
@@ -113,7 +140,7 @@ factor graphs.
         \node[obs] (k) at (0,0) {$k$};
         % Factor
         %\nofactor {kf} {above=1 of k} {Multivariate} {above=1pt};
-        \factorexperimental {k-factor} {(0,1.5)} {Multinomial} {p} {k} {above};
+        \factorexperimental {k-factor} {(0,1.5)} {Multi} {p} {k} {above};
         % Gate
         \newgate {k-gate} {(k-factor)(k-factor-caption)} {l};
       }
