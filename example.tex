@@ -56,93 +56,27 @@ factor graphs.
       \tikz{\node[factor] [label=$\mathcal{N}$] {}; }
       \\
       Plate &
-      \tikz{
-        %\node[latent] (x) {$x_m$};
-        %\node[fit=(x), label={[name=plate-label]right below:n in N}] (plate) {};
-        %\node[draw, fit=(plate)(plate-label)] {};
-        %\node[plate, fit=(x)] (plate) {n in N};
-        %\node[plates] {testi} ;
-        %\node[plate, fit=(x), label=n in N] {}; %{$\forall m \in \mathcal{M}$};
-      }
-    \end{tabular}
-  \end{center}
-\end{table}
-
-% A table of node types
-\begin{table}[ht]
-  \caption{Node types}
-  \begin{center}
-    \begin{tabular}{llc}
-      Type & Command & Output
-      \\
-      \hline
-      Plate &
       \texttt{\textbackslash plate} &
       \tikz{
         \node[latent] (x) {$x_m$};
-        \plate {} {(x)} {$\forall m \in \mathcal{M}$} {};
-      }
-      \\
-      Plate with freely located caption &
-      \texttt{\textbackslash shiftedplate} &
-      \tikz{
-        \node[latent] (x1) {$x_m$};
-        \shiftedplate {} {(x1)} {$\forall m \in \mathcal{M}$} {}
-        {yshift=1pt, above left = 2pt of x1.north east};
-      }
-      \\
-      Factor &
-      \texttt{\textbackslash node[factor]} &
-      \tikz{
-        % Nodes
-        \node[obs]    (x)   at (2,0.5)   {$x$};
-        \node[latent] (mu)  at (0,1)     {$\mu$};
-        \node[latent] (tau) at (0,0)     {$\tau$};
-        % Factors
-        %\node[factor] (f) [left=of x, label={[name=f-caption]above:$\mathcal{N}$}] {}; %
-        \node[factor] (f) [left=of x, label=$\mathcal{N}$] {}; %
-        % Draw arrows
-        \draw[<-] (x) -- (f) edge[-] (mu)
-                             edge[-] (tau);
-      }
-      \\
-      Factor with no inputs nor outputs &
-      % What is the purpose of this command?
-      \texttt{\textbackslash nofactor} &
-      \tikz{
-        \nofactor {N} {} {$\mathcal{A}$} {above=1pt}
-      }
-      \\
-      Factor with one input &
-      \texttt{\textbackslash factor} &
-      \tikz{
-        \node[latent] (l) at (0,0) {$\lambda$};
-        \node[obs] (k) at (2,0) {$k$};
-        \factorexperimental {N} {(1,0)} {$\mathcal{P}$} {l} {k} {above}
-      }
-      \\
-      Factor with two inputs &
-      \texttt{\textbackslash twofactor} &
-      \tikz{
-        \node[latent] (mu) at (0,1) {$\mu$};
-        \node[latent] (tau) at (0,0) {$\tau$};
-        \node[obs] (x) at (2,0.5) {$x$};
-        \twofactor {N} {(1,0.5)} {$\mathcal{N}$} {mu} {tau} {x} {above=1pt}
+        \newplate[x-plate] {(x)} {$m \in \mathcal{M}$};
       }
       \\
       Gate &
-      % TODO: Add the input to the gate!
-      \texttt{\textbackslash gate} &
+      &
       \tikz{
         % Nodes
-        \node[latent] (l) at (0,3) {$\lambda$};
-        \node[latent] (p) at (1.5,1.5) {$\phi$};
-        \node[obs] (k) at (0,0) {$k$};
+        \node[latent] (l) at (0,3) {$\lambda$}; %
+        \node[latent] (p) at (1.5,1.5) {$\phi$}; %
+        \node[obs] (k) at (0,0) {$k$}; %
         % Factor
-        %\nofactor {kf} {above=1 of k} {Multivariate} {above=1pt};
-        \factorexperimental {k-factor} {(0,1.5)} {Multi} {p} {k} {above};
+        % \nofactor {kf} {above=1 of k} {Multivariate} {above=1pt};
+        \node[factor, label={[name=k-factor-caption]Multi}] (k-factor)
+          at (0,1.5) {}; %
         % Gate
-        \newgate {k-gate} {(k-factor)(k-factor-caption)} {l};
+        \newgate[k-gate] {(k-factor)(k-factor-caption)} {l};
+        % Connections
+        \draw[<-] (k) -- (k-factor) edge[-] (p);
       }
     \end{tabular}
   \end{center}
@@ -154,23 +88,81 @@ factor graphs.
   \begin{center}
     \begin{tikzpicture}
       % Define nodes
-      \node[const] (a) at (0,3) {$\alpha$};
+      \node[const]  (a) at (0,3) {$\alpha$};
       \node[latent] (w) at (0,2) {$\mathbf{w}_n$};
       \node[latent] (x) at (2,2) {$\mathbf{x}_n$};
       \node[latent] (t) at (4,0) {$\tau$};
-      \node[obs] (y) at (1,0) {$\mathbf{y}_n$};
+      \node[obs]    (y) at (1,0) {$\mathbf{y}_n$};
 
       % Connect the nodes
-      \draw[->] (a) -- (w);
-      \draw[->] (x) -- (y);
-      \draw[->] (w) -- (y);
-      \draw[->] (t) -- (y);
+      \draw[<-] (w) -- (a);
+      \draw[<-] (y) edge (x)
+                    edge (w)
+                    edge (t);
 
       % Plates
-      \plate{N}{(x)(y)(w)}{$n=1,\ldots,N$}{}
+      \newplate {(x)(y)(w)} {$n=1,\ldots,N$}
     \end{tikzpicture}
   \end{center}
   \caption{A simple Bayesian network.}
+\end{figure}
+
+% Latent Dirichlet allocation
+\begin{figure}[ht]
+  \begin{center}
+    \begin{tikzpicture}[x=2cm,y=2cm]
+
+      % Nodes
+
+      \node[obs]                   (X)      {$X$} ; %
+      \node[latent, above=of X]    (T)      {$T$} ; %
+      \node[latent, above=of T]    (theta)  {$\theta$}; %
+      \node[const, above=of theta] (atheta) {$\alpha_\theta$};
+
+
+      % Factors
+      \node[factor, above=of X, label={[name=X-factor-label]Multi}]
+      (X-factor) {}; %
+      \node[factor, above=of T, 
+      label={[name=T-factor-label]left:Multi}] (T-factor) {}; %
+      \node[factor, above=of theta,
+      label={[name=theta-factor-label]left:Dir}] (theta-factor) {}; %
+
+      % More nodes
+      \node[latent, right=of X-factor] (phi) {$\phi$}; %
+      \node[const, above=of phi]       (aphi) {$\alpha_\phi$}; %
+
+      \node[factor, above=of phi, label={[name=phi-factor-label]right:Dir}]
+      (phi-factor) {};
+
+      \draw[<-] (X)     -- (X-factor)     edge[-] (phi);
+      \draw[<-] (phi)   -- (phi-factor)   edge[-] (aphi);
+      \draw[<-] (T)     -- (T-factor)     edge[-] (theta);
+      \draw[<-] (theta) -- (theta-factor) edge[-] (atheta);
+
+      \newgate[X-gate] {(X-factor)(X-factor-label)} {T}
+
+      \newplate[plate1] {(X)(X-gate)(T)(T-factor)(T-factor-label)}
+      {$\forall 1 \leq i \leq n_d$}; %
+      \newplate {(plate1)(theta)(theta-factor)(theta-factor-label)}
+      {$\forall d \in \mathcal{D}$} ; %
+      \newplate {(phi)(phi-factor)(phi-factor-label)} {$\forall t \in
+        \mathcal{T}$} ; %
+      
+    \end{tikzpicture}
+
+  \end{center}
+
+  \caption{Latent Dirichlet allocation as directed factor graph.}
+
+\end{figure}
+
+% Latent Dirichlet allocation
+\begin{figure}[ht]
+  \begin{center}
+    \begin{tikzpicture}[x=2cm,y=2cm]
+    \end{tikzpicture}
+  \end{center}
 \end{figure}
 
 

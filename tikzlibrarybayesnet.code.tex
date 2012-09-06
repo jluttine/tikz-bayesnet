@@ -30,27 +30,55 @@
 
 % Latent node
 \tikzstyle{latent} = [circle,fill=white,draw=black,inner sep=1pt,
-minimum size=20pt, font=\fontsize{10}{10}\selectfont]
+minimum size=20pt, font=\fontsize{10}{10}\selectfont, node distance=1]
 % Observed node
 \tikzstyle{obs} = [latent,fill=gray!25]
 % Constant node
-\tikzstyle{const} = [rectangle, inner sep=0pt]
+\tikzstyle{const} = [rectangle, inner sep=0pt, node distance=1]
 % Factor node
 \tikzstyle{factor} = [rectangle, fill=black,minimum size=5pt, inner
-sep=0pt, node distance=15pt]
+sep=0pt, node distance=0.4, font=\small]
+
+%\tikzstyle{label} += [font=\footnotesize]
+
 % Caption node?
 %\tikzstyle{caption} = [node distance=2pt]
 
 \tikzset{plates/.code={\text{Hello world!}}}
 
 % Plate node
-\tikzstyle{plate} = [draw, rectangle]
+\tikzstyle{plate} = [draw, rectangle, rounded corners, fit=#1]
+% Constant node
+\tikzstyle{wrap} = [inner sep=0pt, fit=#1]
+% Caption node
+\tikzstyle{caption} = [font=\footnotesize] %
+\tikzstyle{plate caption} = [caption, node distance=0, inner sep=0pt,
+below left=5pt and 0pt of #1.south east] %
+\tikzstyle{factor caption} = [caption] %
+\tikzstyle{every label} += [caption] %
 
 \tikzset{>={triangle 45}}
 
 \pgfdeclarelayer{b}
 \pgfdeclarelayer{f}
 \pgfsetlayers{b,main,f}
+
+% name, fitlist, caption
+\newcommand{\newplate}[3][default]{ %
+  \node[wrap=#2] (#1-wrap) {}; %
+  \node[plate caption=#1-wrap] (#1-caption) {#3}; %
+  \node[plate=(#1-wrap)(#1-caption)] (#1) {}; %
+}
+
+% name,  fitlist, input
+\newcommand{\newgate}[3][default]{ %
+  \node[rectangle,draw,dashed, inner sep=2pt, fit=#2] (#1) {}; %
+  \draw [-*,thick] (#3) -- (#1); %
+}
+
+%\newcommand{\newfactor}[3][default]{ %
+%  \node[factor]
+%  }
 
 
 % shapename, fitlist, caption, pos
@@ -125,12 +153,6 @@ sep=0pt, node distance=15pt]
 %shapename,  fitlist, caption
 \newcommand{\gate}[3]{ %
   \node (#1) [rectangle,draw,dashed, inner sep=2pt, fit=#2]{};
-}
-
-% shapename,  fitlist, input
-\newcommand{\newgate}[3]{ %
-  \node (#1) [rectangle,draw,dashed, inner sep=2pt, fit=#2] {}; %
-  \draw [-*,thick] (#3) -- (#1); %
 }
 
 %shapename,  fitlist1, fitlist2, caption1, caption2
