@@ -41,42 +41,57 @@ factor graphs.
       \hline
       Latent variable &
       \texttt{\textbackslash node[latent]} &
-      \tikz{\node[latent] {$x$};}
+      \tikz{ %
+        \node[latent] {$x$}; %
+      }
       \\
       Observed variable &
       \texttt{\textbackslash node[obs]} &
-      \tikz{\node[obs] {$y$};}
+      \tikz{ %
+        \node[obs] {$y$}; %
+      }
       \\
       Constant &
       \texttt{\textbackslash node[const]} &
-      \tikz{\node[const] {$a$};}
+      \tikz{ %
+        \node[const] {$a$}; %
+      }
       \\
       Factor &
       \texttt{\textbackslash node[factor]} &
-      \tikz{\node[factor] [label=$\mathcal{N}$] {}; }
+      \tikz{ %
+        \node[factor] [label=$\mathcal{N}$] {}; %
+      }
+      \\
+      Factor with nodes &
+      &
+      \tikz{ %
+        \node[obs] (y) {$y$} ; %
+        \node[latent, left=of y, yshift=0.5cm] (mu) {$\mu$} ; %
+        \node[latent, left=of y, yshift=-0.5cm] (tau) {$\tau$} ; %
+        \factor[left=of y] {y-factor} {$\mathcal{N}$} ;
+        \factoredge {mu,tau} {y-factor} {y} ; %
+      }
       \\
       Plate &
       \texttt{\textbackslash plate} &
-      \tikz{
-        \node[latent] (x) {$x_m$};
-        \newplate[x-plate] {(x)} {$m \in \mathcal{M}$};
+      \tikz{ %
+        \node[latent] (x) {$x_m$}; %
+        \plate {(x)} {$m \in \mathcal{M}$}; %
       }
       \\
       Gate &
       &
       \tikz{
         % Nodes
-        \node[latent] (l) at (0,3) {$\lambda$}; %
-        \node[latent] (p) at (1.5,1.5) {$\phi$}; %
-        \node[obs] (k) at (0,0) {$k$}; %
-        % Factor
-        % \nofactor {kf} {above=1 of k} {Multivariate} {above=1pt};
-        \node[factor, label={[name=k-factor-caption]Multi}] (k-factor)
-          at (0,1.5) {}; %
-        % Gate
-        \newgate[k-gate] {(k-factor)(k-factor-caption)} {l};
+        \node[obs]                    (k)   {$k$}; %
+        \node[latent, above=2 of k]   (l)   {$\lambda$}; %
+        \factor[above=0.8 of k]       {k-f} {Multi} ; %
+        \node[latent, right=of k-f]   (p)   {$\phi$}; %
         % Connections
-        \draw[<-] (k) -- (k-factor) edge[-] (p);
+        \factoredge {p} {k-f} {k} ; %
+        % Gate
+        \gate {(k-f)(k-f-caption)} {l};
       }
     \end{tabular}
   \end{center}
@@ -95,13 +110,11 @@ factor graphs.
       \node[obs]    (y) at (1,0) {$\mathbf{y}_n$};
 
       % Connect the nodes
-      \draw[<-] (w) -- (a);
-      \draw[<-] (y) edge (x)
-                    edge (w)
-                    edge (t);
+      \edge {a} {w} ; %
+      \edge {x,w,t} {y} ; %
 
       % Plates
-      \newplate {(x)(y)(w)} {$n=1,\ldots,N$}
+      \plate {(x)(y)(w)} {$n=1,\ldots,N$}
     \end{tikzpicture}
   \end{center}
   \caption{A simple Bayesian network.}
@@ -110,7 +123,7 @@ factor graphs.
 % Latent Dirichlet allocation
 \begin{figure}[ht]
   \begin{center}
-    \begin{tikzpicture}[x=2cm,y=2cm]
+    \begin{tikzpicture}[x=1.7cm,y=1.8cm]
 
       % Nodes
 
@@ -121,33 +134,34 @@ factor graphs.
 
 
       % Factors
-      \node[factor, above=of X, label={[name=X-factor-label]Multi}]
-      (X-factor) {}; %
-      \node[factor, above=of T, 
-      label={[name=T-factor-label]left:Multi}] (T-factor) {}; %
-      \node[factor, above=of theta,
-      label={[name=theta-factor-label]left:Dir}] (theta-factor) {}; %
+      \factor[above=of X]     {X-f}     {Multi} ; %
+      \factor[above=of T]     {T-f}     {left:Multi} ; %
+      \factor[above=of theta] {theta-f} {left:Dir} ; %
 
       % More nodes
-      \node[latent, right=of X-factor] (phi) {$\phi$}; %
-      \node[const, above=of phi]       (aphi) {$\alpha_\phi$}; %
+      \node[latent, right=of X-f] (phi)  {$\phi$}; %
+      \node[const, above=of phi]  (aphi) {$\alpha_\phi$}; %
 
-      \node[factor, above=of phi, label={[name=phi-factor-label]right:Dir}]
-      (phi-factor) {};
+      \factor[above=of phi] {phi-f} {right:Dir} ; %
 
-      \draw[<-] (X)     -- (X-factor)     edge[-] (phi);
-      \draw[<-] (phi)   -- (phi-factor)   edge[-] (aphi);
-      \draw[<-] (T)     -- (T-factor)     edge[-] (theta);
-      \draw[<-] (theta) -- (theta-factor) edge[-] (atheta);
+      \factoredge {theta}  {T-f}     {T} ; %
+      \factoredge {atheta} {theta-f} {theta} ; %
+      \factoredge {phi}    {X-f}     {X} ; %
+      \factoredge {aphi}   {phi-f}   {phi} ; %
 
-      \newgate[X-gate] {(X-factor)(X-factor-label)} {T}
+      \gate[X-gate] {(X-f)(X-f-caption)} {T}
 
-      \newplate[plate1] {(X)(X-gate)(T)(T-factor)(T-factor-label)}
-      {$\forall 1 \leq i \leq n_d$}; %
-      \newplate {(plate1)(theta)(theta-factor)(theta-factor-label)}
-      {$\forall d \in \mathcal{D}$} ; %
-      \newplate {(phi)(phi-factor)(phi-factor-label)} {$\forall t \in
-        \mathcal{T}$} ; %
+      \plate[plate1] { %
+        (X)(X-gate) %
+        (T)(T-f)(T-f-caption) %
+      } {$\forall 1 \leq i \leq n_d$}; %
+      \plate { %
+        (plate1) %
+        (theta)(theta-f)(theta-f-caption) %
+      } {$\forall d \in \mathcal{D}$} ; %
+      \plate { %
+        (phi)(phi-f)(phi-f-caption) %
+      } {$\forall t \in \mathcal{T}$} ; %
       
     \end{tikzpicture}
 
@@ -156,184 +170,126 @@ factor graphs.
   \caption{Latent Dirichlet allocation as directed factor graph.}
 
 \end{figure}
-
-% Latent Dirichlet allocation
-\begin{figure}[ht]
-  \begin{center}
-    \begin{tikzpicture}[x=2cm,y=2cm]
-    \end{tikzpicture}
-  \end{center}
-\end{figure}
-
 
 % Latent Dirichlet allocation
 \begin{figure}[ht]
   \begin{center}
     \begin{tikzpicture}
 
-      % Nodes
-      
-      \matrix[row sep=15pt,column sep=40pt, matrix anchor=mid] (lda) {
-        &
+      % Layout the variables
+      \matrix[row sep=0.5cm, column sep=1.2cm] (LDA)
+      { %
+        & %
+        & %
+        \node[latent] (gamma)  {$\gamma$} ; & %
+        \node[latent] (lambda) {$\lambda$} ; & %
+        \node[latent] (psi)    {$\psi$} ; %
         \\
-        &
         \\
-        \node (lambda) [latent] {$\theta$}; &
+        \node[latent] (theta)  {$\theta$} ; & %
+        & %
+        \node[latent] (C)      {$C$} ; & %
+        \node[latent] (S)      {$S$} ; & %
         \\
-        \nofactor{drawtc}{}{Multi}{left=0pt}; &
+        & %
+        & %
+        \factor       {T-f1}   {Multi} ; & %
+        & %
+        \factor       {T-f2}   {below:Multi} ; & %
         \\
-        \node (tc) [latent] {$T$}; &
+        \node[latent] (T')     {$T'$} ; & %
+        & %
+        \node[latent] (T)      {$T$} ; & %
         \\
-        \nofactor{drawxc}{}{Multi}{above=0pt}; \gate{gatexc}{(drawxc)
-          (captdrawxc)}{$t$}; & \node (phi) [latent] {$\phi$};
+        \factor       {W'-f}   {Multi} ; & %
+        \node[latent] (phi)    {$\phi$} ; & %
+        \factor       {W-f}    {Multi} ; %
         \\
-        \node (xc) [obs] {$X$}; &
+        \node[obs] (W')        {$W'$} ; & %
+        & %
+        \node[obs] (W)         {$W$} ;
         \\
       };
-      \nofactor{drawlambda}{above=15pt of lambda}{Dir}{right=0pt};
-      \nofactor{drawphi}{above=15pt of phi}{Dir}{right=0pt};
-      \node (alphalambda) [const, above=15pt of drawlambda]  {$\alpha_{\theta}$};
-      \node (alphaphi) [const, above=15pt of drawphi]  {$\alpha_{\phi}$};
 
-      % Connections
-      
-      \draw [->] (alphaphi) -- (drawphi) -- (phi);
-      \draw [->] (alphalambda) -- (drawlambda) -- (lambda);
-      \draw [->] (lambda) -- (drawtc) -- (tc);
-      \draw [->] (phi) -- (drawxc) -- (xc);
-      \draw [-*] (tc) -- (gatexc);
+      % Remaining factors
+      \factor[above=of T']     {T'-f}     {left:Multi} ; %
+      \factor[above=of theta]  {theta-f}  {left:Dir} ; %
+      \factor[above=of C]      {C-f}      {left:Multi} ; %
+      \factor[above=of S]      {S-f}      {left:Bern} ; %
+      \factor[above=of gamma]  {gamma-f}  {left:Dir} ; %
+      \factor[above=of lambda] {lambda-f} {left:Beta} ; %
+      \factor[above=of psi]    {psi-f}    {left:Dir} ; %
+      \factor[above=of phi]    {phi-f}    {left:Dir} ; %
+
+      % Hyperparameters
+      \node[const, above=of theta]  (atheta)  {$\alpha_\theta$}; %
+      \node[const, above=of phi]    (aphi)    {$\alpha_\phi$}; %
+      \node[const, above=of gamma]  (agamma)  {$\alpha_\gamma$}; %
+      \node[const, above=of lambda, xshift=-0.5cm] (alambda1)
+      {$\alpha_{\lambda_\theta}$}; %
+      \node[const, above=of lambda, xshift=0.5cm] (alambda2)
+      {$\alpha_{\lambda_\psi}$}; %
+      \node[const, above=of psi]    (apsi)    {$\alpha_\psi$}; %
+
+      % Factor connections
+      \factoredge {phi}               {W'-f}     {W'} ; %
+      \factoredge {phi}               {W-f}      {W} ; %
+      \factoredge {theta}             {T'-f}     {T'} ; %
+      \factoredge {theta}             {T-f1}     {T} ; %
+      \factoredge {psi}               {T-f2}     {T} ; %
+      \factoredge {atheta}            {theta-f}  {theta} ; %
+      \factoredge {gamma}             {C-f}      {C} ; %
+      \factoredge {lambda}            {S-f}      {S} ; %
+      \factoredge {agamma}            {gamma-f}  {gamma} ; %
+      \factoredge {alambda1,alambda2} {lambda-f} {lambda} ; %
+      \factoredge {apsi}              {psi-f}    {psi} ; %
+      \factoredge {aphi}              {phi-f}    {phi} ; %
+
+      % Gates
+      \gate[W'-gate] {(W'-f)(W'-f-caption)} {T'} ; %
+      \gate[W-gate]  {(W-f)(W-f-caption)}   {T} ; %
+      \gate[T-gate]  {(T-f1)(T-f1-caption)} {C} ;
+      \vgate {T-vgate} %
+        {(T-gate)} {$S=0$} %
+        {(T-f2)(T-f2-caption)} {$S=1$} %
+        {S} ; %
 
       % Plates
+      \plate[LDA1] { %
+        (T')(T'-f)(T'-f-caption) %
+        (W')(W'-gate) %
+      } {$\forall w' \in c$} ; %
 
-      \plate {contentplatec}
-      {(tc)(xc)(drawtc)(drawxc)(captdrawtc)(captdrawxc)(gatexc)}
-      {$\forall 1 \leq i \leq n_d $} {}
+      \plate[LDA2] { %
+        (LDA1) %
+        (theta)(theta-f)(theta-f-caption) %
+      } {$\forall c \in \mathcal{C}$} ; %
 
-      \plate {userplatec}
-      {(contentplatec)(lambda)(drawlambda)(captdrawlambda)} {$\forall
-        d \in \mathcal{D}$} {}
+      \plate { %
+        (phi)(phi-f)(phi-f-caption) %
+      } {$\forall t \in \mathcal{T}$} ; %
 
-      \plate {topicplate} {(phi)(drawphi)(captdrawphi)} {$\forall t
-        \in \mathcal{T}$}{}
+      \plate[P1] { %
+        (W)(W-gate) %
+        (T)(T-vgate) %
+        (C)(C-f)(C-f-caption) %
+        (S)(S-f)(S-f-caption) %
+      } {$\forall w \in d$} ;
+      
+      \plate { %
+        (P1) %
+        (gamma)(gamma-f)(gamma-f-caption) %
+        (lambda)(lambda-f)(lambda-f-caption) %
+        (psi)(psi-f)(psi-f-caption) %
+      } {$\forall d \in \mathcal{D}$} ; %
 
-    \end{tikzpicture}
-
+    \end{tikzpicture} 
   \end{center}
 
-  \caption{Latent Dirichlet allocation as directed factor graph.}
-
+  \caption{Citation influence model with own topics as directed factor
+    graph.}
+  
 \end{figure}
 
-
-\begin{figure}[h]
-\begin{center}
-% Citation Influence
-\begin{tikzpicture}
-
-\matrix[row sep=4mm,column sep=10mm, matrix anchor=mid] (citinf) {
-&
-&[3mm] \node (psi) [latent] {$\gamma$};
-&[12mm,between origins] \node (balance) [latent] {$\lambda$};
-&[12mm,between origins] \node (innov) [latent] {$\psi$};
-\\
-
-&
-& \nofactor{drawf}{}{Multi}{left=0pt};
-&\nofactor{drawbalance}{}{Bern}{left=0pt};
-&
-\\
-
-\node (lambda) [latent] {$\theta$}; 
-&
-& \node (f) [latent]  {$C$}; 
-&\node (s) [latent]  {$S$}; 
-&
-\\
-
-\nofactor{drawtc}{}{Multi}{left=0pt};
-&
-& \nofactor{drawtd}{}{Multi}{above=0pt};\gate{gatetd}{(drawtd) (captdrawtd)}{$\mathcal{T}$};
-&
-&\nofactor{drawtdinnov}{}{Multi}{below=0pt};
-\\
-
-\node (tc) [latent]  {$T'$}; 
-&
-& \node (td) [latent]  {$T$}; 
-&
-&
-\\
-
-\nofactor{drawxc}{}{Multi}{above=0pt}; \gate{gatexc}{(drawxc) (captdrawxc)}{$t$};
-&  \node (phi) [latent]  {$\phi$};
-& \nofactor{drawxd}{}{Multi}{above=0pt}; \gate{gatexd}{(drawxd) (captdrawxd)}{$t$};
-&
-&
-\\
-
-\node (xc) [obs]  {$W'$}; 
-&
-&\node (xd) [obs]  {$W$}; 
-&
-&
-\\
-\\
-};
-
-\vertogate{gates}{(drawtd)(captdrawtd)}{$S=0$}{(drawtdinnov)(captdrawtdinnov)}{$S=1$};
-
-\nofactor{drawlambda}{above=8pt of lambda}{Dir}{right=0pt};
-\node (alphalambda) [const, above=10pt of drawlambda]  {$\alpha_{\theta}$};
-
-\nofactor{drawphi}{above=8pt of phi}{Dir}{right=0pt};
-\node (alphaphi) [const, above=10pt of drawphi]  {$\alpha_{\phi}$};
-
-\nofactor{drawpsi}{above=8pt of psi}{Dir}{left=0pt};
-\node (alphapsi) [const, above=18pt of drawpsi] {$\alpha_{\gamma}$}; 
-
-\nofactor{drawbalancep}{above=8pt of balance}{Beta}{left=0pt};
-\node (alphabalance1) [const, above left=18pt and 8 pt of drawbalancep] {$\alpha_{\lambda_{\theta}}$}; 
-\node (alphabalance2) [const, above right=18pt and 8 pt of drawbalancep] {$\alpha_{\lambda_{\psi}}$}; 
-
-\nofactor{drawinnovp}{above=8pt of innov}{Dir}{left=0pt};
-\node (alphainnov) [const, above=18pt of drawinnovp] {$\alpha_{\psi}$}; 
-
-\draw [->] (alphaphi) -- (drawphi) -- (phi);
-\draw [->] (alphalambda) -- (drawlambda) -- (lambda);
-\draw [->] (alphapsi) -- (drawpsi) -- (psi);
-\draw [->] (alphabalance1) -- (drawbalancep) -- (balance);
-\draw [-] (alphabalance2) -- (drawbalancep);
-\draw [->] (alphainnov) -- (drawinnovp) -- (innov);
-
-\draw [->] (psi) -- (drawf) -- (f);
-\draw [->] (lambda) -- (drawtc) -- (tc);
-\draw [->] (lambda) -- (drawtd) -- (td);
-\draw [->] (phi) -- (drawxc) -- (xc);
-\draw [->] (phi) -- (drawxd) -- (xd);
-\draw [->] (balance) -- (drawbalance) -- (s);
-\draw [->] (innov) -- (drawtdinnov) -- (td);
-
-
-\draw [-*] (tc) -- (gatexc);
-\draw [-*] (td) -- (gatexd);
-\draw [-*] (f) -- (gatetd);
-\draw [-*] (s) -- (gates);
-
-
-\plate{contentplatec}{(tc)(xc)(drawtc)(drawxc)(captdrawtc)(captdrawxc)(gatexc)}{$\forall w' \in c$}{}
-\plate{userplatec}{(contentplatec)(lambda)(drawlambda)(captdrawlambda)}{$\forall c \in \mathcal{C}$}{}
-\plate{contentplated}{(f)(td)(xd)(drawtd)(drawxd)(drawf)(captdrawtd)(captdrawxd)(captdrawf)(gatetd)(gatexd)(gates)(s)(drawbalance)}{$\forall w \in d$}{}
-\plate{userplated}{(contentplated)(psi)(drawpsi)(captdrawpsi)(balance)(drawbalance)(captdrawbalance)(innov)}{$\forall d \in \mathcal{D}$}{}
-
-\plate{topicplate}{(phi)(drawphi)(captdrawphi)}{$\forall t \in \mathcal{T}$}{}
-
-
-\end{tikzpicture}
-
-\end{center}
-
-\caption{Citation influence model with own topics as directed factor graph.\label{fig:Citinf-owntopics-model}}
-
-\end{figure}
 
 \end{document}

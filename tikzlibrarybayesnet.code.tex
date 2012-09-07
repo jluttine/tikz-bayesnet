@@ -50,8 +50,10 @@ sep=0pt, node distance=0.4, font=\small]
 \tikzstyle{plate} = [draw, rectangle, rounded corners, fit=#1]
 % Constant node
 \tikzstyle{wrap} = [inner sep=0pt, fit=#1]
+% Gate
+\tikzstyle{gate} = [draw, rectangle, dashed, fit=#1]
 % Caption node
-\tikzstyle{caption} = [font=\footnotesize] %
+\tikzstyle{caption} = [font=\footnotesize, node distance=0] %
 \tikzstyle{plate caption} = [caption, node distance=0, inner sep=0pt,
 below left=5pt and 0pt of #1.south east] %
 \tikzstyle{factor caption} = [caption] %
@@ -63,284 +65,223 @@ below left=5pt and 0pt of #1.south east] %
 \pgfdeclarelayer{f}
 \pgfsetlayers{b,main,f}
 
+\newcommand{\factoredge}[4][]{ %
+  % Connect all nodes #2 to all nodes #4 via all factors #3.
+  \foreach \f in {#3} { %
+    \foreach \x in {#2} { %
+      \draw[-,#1] (\x) edge[-] (\f) ;%
+    } ;
+    \foreach \y in {#4} { %
+      \draw[->,#1] (\f) -- (\y) ;%
+    } ;
+  } ;
+  %\draw[<-,#1] (#2) -- (#2-factor) edge[-] (#3) ;
+}
+
+\newcommand{\edge}[3][]{ %
+  % Connect all nodes #2 to all nodes #3.
+  \foreach \x in {#2} { %
+    \foreach \y in {#3} { %
+      \draw[->,#1] (\x) -- (\y) ;%
+    } ;
+  } ;
+}
+
+\newcommand{\factor}[3][]{ %
+  \node[factor, label={[name=#2-caption]#3}, #1] (#2) {} ;  %
+}
+
 % name, fitlist, caption
-\newcommand{\newplate}[3][default]{ %
+\newcommand{\plate}[3][default]{ %
   \node[wrap=#2] (#1-wrap) {}; %
   \node[plate caption=#1-wrap] (#1-caption) {#3}; %
   \node[plate=(#1-wrap)(#1-caption)] (#1) {}; %
 }
 
 % name,  fitlist, input
-\newcommand{\newgate}[3][default]{ %
+\newcommand{\gate}[3][default]{ %
   \node[rectangle,draw,dashed, inner sep=2pt, fit=#2] (#1) {}; %
-  \draw [-*,thick] (#3) -- (#1); %
+  \foreach \x in {#3} { %
+    \draw [-*,thick] (\x) -- (#1); %
+  } ;%
 }
 
-%\newcommand{\newfactor}[3][default]{ %
-%  \node[factor]
-%  }
-
-
-% shapename, fitlist, caption, pos
-\newcommand{\plate}[4]{ %
-  \begin{pgfonlayer}{b}
-    \node (invis#1) [draw, color=white, inner sep=1pt, rectangle,
-    fit=#2] {};
-  \end{pgfonlayer}
-  \begin{pgfonlayer}{f}
-    \node (capt#1) [ below left=0 pt of invis#1.south east,
-    xshift=2pt,yshift=1pt] {\footnotesize{#3}}; %
-    \node (#1) [draw,inner sep=2pt, rectangle,fit=(invis#1)
-    (capt#1),#4] {}; %
-  \end{pgfonlayer}
-}
-
-
-\newcommand{\shiftedplate}[5]{ %
-  \begin{pgfonlayer}{b}
-    \node (invis#1) [draw, color=white, inner sep=0pt, rectangle,
-    fit=#2] {};
-  \end{pgfonlayer}
-  \begin{pgfonlayer}{f}
-    \node (capt#1) [#5, xshift=2pt] {\footnotesize{#3}}; %
-    \node (#1) [draw,inner sep=2pt, rectangle, fit=(invis#1) (capt#1),
-    #4] {}; %
-\end{pgfonlayer}
-}
-
-%shapename, pos, caption, in1, in2, out, captpos
-\newcommand{\twofactor}[7]{ %
-  \node (#1) [factor] at #2 {};%
-  \node (capt#1) [#7 of #1]{\footnotesize{#3}}; %
-  \draw [-] (#4) -- (#1) ; %
-  \draw [-] (#5) -- (#1) ; %
-  \draw [->,thick] (#1) -- (#6); %
-}
-
-%shapename, pos, caption, in, out, captpos
-\newcommand{\factorexperimental}[6]{ %
-  \node [factor] (#1) at #2 {}; %
-  \node (#1-caption) [#6] at #2 {\footnotesize{#3}}; %
-  \draw [-] (#4) -- (#1) ; %
-  \draw [->,thick] (#1) -- (#5); %
-}
-
-% shapename, pos, caption, in, out, captpos
-\newcommand{\factor}[6]{ %
-  \node (#1) [factor] at #2 {}; %
-  \node (#1-caption) [#6 of #1]{\footnotesize{#3}}; %
-  \draw [-] (#4) -- (#1) ; %
-  \draw [->,thick] (#1) -- (#5); %
-}
-
-% name, --, caption, pos
-\newcommand{\nofactor}[4]{ %
-  \node (#1) [factor, #2] {}; %
-  \node (capt#1) [#4 of #1]{\footnotesize{#3}}; %
-}
-
-%shapename,  fitlist, caption
-\newcommand{\namedgate}[3]{ %
-  \begin{pgfonlayer}{b}
-    \node (invisgate#1) [rectangle, draw, color=white, fit=#2] {};
-  \end{pgfonlayer}
-  \node (gatecapt#1) [ above right=0 pt of invisgate#1.north west,
-  xshift=-1pt ] {\footnotesize{#3}}; %
-  \node (#1) [rectangle,draw,dashed, inner sep=2pt,
-  fit=(invisgate#1)(gatecapt#1)]{}; %
-}
-
-%shapename,  fitlist, caption
-\newcommand{\gate}[3]{ %
-  \node (#1) [rectangle,draw,dashed, inner sep=2pt, fit=#2]{};
-}
-
-%shapename,  fitlist1, fitlist2, caption1, caption2
-\newcommand{\vertgate}[5]{ %
-  \begin{pgfonlayer}{b}
-    \node (invisgateleft#1) [rectangle, draw, color=white, fit=#2]
-    {}; %
-    \node (invisgateright#1) [rectangle, draw, color=white, fit=#4]
-    {}; %
-  \end{pgfonlayer}
-  \node (gatecaptleft#1) [ above left=0 pt of invisgateleft#1.north
-  east, xshift=1pt ]{\footnotesize{#3}} ; %
-  \node (gatecaptright#1) [ above right=0 pt of invisgateright#1.north
-  west, xshift=-1pt ] {\footnotesize{#5}}; %
-  \node (#1) [rectangle,draw,dashed, inner sep=2pt,
-  fit=(invisgateleft#1)(gatecaptleft#1)(invisgateright#1)(gatecaptright#1)]{}; %
+\newcommand{\vgate}[6]{ %
+  % Wrap the left and right parts
+  \node[wrap=#2] (#1-left) {}; %
+  \node[wrap=#4] (#1-right) {}; %
+  % Draw the gate
+  \node[gate=(#1-left)(#1-right)] (#1) {}; %
+  % Add captions
+  \node[caption, below left=of #1.north ] (#1-left-caption)
+  {#3}; %
+  \node[caption, below right=of #1.north ] (#1-right-caption)
+  {#5}; %
+  % Draw middle separation
   \draw [-, dashed] (#1.north) -- (#1.south); %
-}
-
-
-\newcommand{\vertgateSpec}[5]{
-  \begin{pgfonlayer}{b}
-    \node (invisgateleft#1) [rectangle, draw, color=white,  fit=#2] {}; %
-    \node (invisgateright#1) [rectangle, draw, color=white,  fit=#4] {}; %
-  \end{pgfonlayer}
-  \node (gatecaptleft#1) [ above left=0 pt of invisgateleft#1.north
-  east, xshift=1pt ]{\footnotesize{#3}}; %
-  \node (gatecaptright#1) [ above right=0 pt of invisgateright#1.north
-  west, xshift=-1pt ] {\footnotesize{#5}}; %
-  \node (#1) [rectangle,draw,dashed, inner sep=2pt,
-  fit=(invisgateleft#1)(gatecaptleft#1)(invisgateright#1)(gatecaptright#1)]{}; %
-  \draw [-, dashed] (#1.70) -- (#1.290); %
-}
-
-\newcommand{\horgate}[5]{
-  \begin{pgfonlayer}{b}
-    \node (invisgateleft#1) [rectangle, draw, color=white, fit=#2]
-    {}; %
-    \node (invisgateright#1) [rectangle, draw, color=white, fit=#4]
-    {}; %
-  \end{pgfonlayer}
-  \node (gatecaptleft#1) [ above right=0 pt of invisgateleft#1.south
-  west, xshift=1pt ]{\footnotesize{#3}}; %
-  \node (gatecaptright#1) [ below right=0 pt of invisgateright#1.north
-  west, xshift=-1pt ] {\footnotesize{#5}}; %
-  \node (#1) [rectangle,draw,dashed, inner sep=2pt,
-  fit=(invisgateleft#1)(gatecaptleft#1)(invisgateright#1)(gatecaptright#1)]{}; %
-  \draw [-, dashed] (#1.west) -- (#1.east); %
-}
-
-\newcommand{\horogate}[5]{
-  \begin{pgfonlayer}{b}
-    \node (invisgateleft#1) [rectangle, draw, color=white, fit=#2]
-    {}; %
-    \node (invisgateright#1) [rectangle, draw, color=white, fit=#4]
-    {}; %
-  \end{pgfonlayer}
-  \node (#1) [rectangle,draw,dashed, inner sep=2pt,
-  fit=(invisgateleft#1)(invisgateright#1)]{}; %
-  \node (gatecaptleft#1) [ above right=0 pt of #1.west, xshift=0pt
-  ]{\footnotesize{#3}}; %
-  \node (gatecaptright#1) [ below right=0 pt of #1.west, xshift=0pt ]
-  {\footnotesize{#5}}; %
-  \draw [-, dashed] (#1.west) -- (#1.east); %
-}
-
-
-\newcommand{\vertogate}[5]{
-  \begin{pgfonlayer}{b}
-    \node (invisgateleft#1) [rectangle, draw, color=white, fit=#2]
-    {}; %
-    \node (invisgateright#1) [rectangle, draw, color=white, fit=#4]
-    {}; %
-  \end{pgfonlayer}
-  \node (#1) [rectangle,draw,dashed, inner sep=2pt,
-  fit=(invisgateleft#1)(invisgateright#1)]{}; %
-  \node (gatecaptleft#1) [ below left=0 pt of #1.north, xshift=0pt
-  ]{\footnotesize{#3}}; %
-  \node (gatecaptright#1) [ below right=0 pt of #1.north, xshift=0pt ]
-  {\footnotesize{#5}}; %
-  \draw [-, dashed] (#1.north) -- (#1.south); %
+  % Draw inputs
+  \foreach \x in {#6} { %
+    \draw [-*,thick] (\x) -- (#1); %
+    %\draw [-*,thick] (\x) -- (#1.north); %
+  } ;%
 }
 
 \endinput
 
-% \tikzset{ %
-%   latent/.style={circle,fill=white,draw=black,inner sep=1pt, minimum
-%     size=20pt, font=\fontsize{10}{10}\selectfont}, %
-%   obs/.style={latent,fill=gray!25}, %
-%   const/.style={rectangle, inner sep=0pt}, %
-%   factor/.style={rectangle, fill=black,minimum size=5pt, inner
-%     sep=0pt}, %
-%   >={triangle 45}%
+% % shapename, fitlist, caption, pos
+% \newcommand{\plate}[4]{ %
+%   \begin{pgfonlayer}{b}
+%     \node (invis#1) [draw, color=white, inner sep=1pt, rectangle,
+%     fit=#2] {};
+%   \end{pgfonlayer}
+%   \begin{pgfonlayer}{f}
+%     \node (capt#1) [ below left=0 pt of invis#1.south east,
+%     xshift=2pt,yshift=1pt] {\footnotesize{#3}}; %
+%     \node (#1) [draw,inner sep=2pt, rectangle,fit=(invis#1)
+%     (capt#1),#4] {}; %
+%   \end{pgfonlayer}
 % }
 
 
+% \newcommand{\shiftedplate}[5]{ %
+%   \begin{pgfonlayer}{b}
+%     \node (invis#1) [draw, color=white, inner sep=0pt, rectangle,
+%     fit=#2] {};
+%   \end{pgfonlayer}
+%   \begin{pgfonlayer}{f}
+%     \node (capt#1) [#5, xshift=2pt] {\footnotesize{#3}}; %
+%     \node (#1) [draw,inner sep=2pt, rectangle, fit=(invis#1) (capt#1),
+%     #4] {}; %
+% \end{pgfonlayer}
+% }
 
-% Styles for states:
+% %shapename, pos, caption, in1, in2, out, captpos
+% \newcommand{\twofactor}[7]{ %
+%   \node (#1) [factor] at #2 {};%
+%   \node (capt#1) [#7 of #1]{\footnotesize{#3}}; %
+%   \draw [-] (#4) -- (#1) ; %
+%   \draw [-] (#5) -- (#1) ; %
+%   \draw [->,thick] (#1) -- (#6); %
+% }
 
-\usetikzlibrary{shapes.multipart}
+% %shapename, pos, caption, in, out, captpos
+% \newcommand{\factorexperimental}[6]{ %
+%   \node [factor] (#1) at #2 {}; %
+%   \node (#1-caption) [#6] at #2 {\footnotesize{#3}}; %
+%   \draw [-] (#4) -- (#1) ; %
+%   \draw [->,thick] (#1) -- (#5); %
+% }
 
-\tikzstyle{every state}=           []
+% % shapename, pos, caption, in, out, captpos
+% \newcommand{\factor}[6]{ %
+%   \node (#1) [factor] at #2 {}; %
+%   \node (#1-caption) [#6 of #1]{\footnotesize{#3}}; %
+%   \draw [-] (#4) -- (#1) ; %
+%   \draw [->,thick] (#1) -- (#5); %
+% }
 
-\tikzstyle{state without output}=  [circle,draw,minimum size=2.5em,every state]
-\tikzstyle{state with output}=     [circle split,draw,minimum size=2.5em,every state]
+% % name, --, caption, pos
+% \newcommand{\nofactor}[4]{ %
+%   \node (#1) [factor, #2] {}; %
+%   \node (capt#1) [#4 of #1]{\footnotesize{#3}}; %
+% }
 
-\tikzstyle{accepting by arrow}=    [after node path=
-{
-  {
-    [to path=
-    {
-      [->,double=none,every accepting by arrow]
-      --
-      ([shift=(\tikz@accepting@angle:\tikz@accepting@distance)]\tikztostart.\tikz@accepting@angle)
-          node [shape=rectangle,anchor=\tikz@accepting@anchor] {\tikz@accepting@text}
-      }]
-    edge ()
-  }
-}]
-\tikzstyle{every accepting by arrow}=[]
-\tikzstyle{accepting by double}= [double,outer sep=.5\pgflinewidth+.3pt] % .3pt is half double width distance
+% %shapename,  fitlist, caption
+% \newcommand{\namedgate}[3]{ %
+%   \begin{pgfonlayer}{b}
+%     \node (invisgate#1) [rectangle, draw, color=white, fit=#2] {};
+%   \end{pgfonlayer}
+%   \node (gatecapt#1) [ above right=0 pt of invisgate#1.north west,
+%   xshift=-1pt ] {\footnotesize{#3}}; %
+%   \node (#1) [rectangle,draw,dashed, inner sep=2pt,
+%   fit=(invisgate#1)(gatecapt#1)]{}; %
+% }
 
-\tikzstyle{initial by arrow}=   [after node path=
-{
-  {
-    [to path=
-    {
-      [->,double=none,every initial by arrow]
-      ([shift=(\tikz@initial@angle:\tikz@initial@distance)]\tikztostart.\tikz@initial@angle)
-          node [shape=rectangle,anchor=\tikz@initial@anchor] {\tikz@initial@text}
-        -- (\tikztostart)}]
-    edge ()
-  }
-}]
-\tikzstyle{every initial by arrow}=[]
+% %shapename,  fitlist, caption
+% \newcommand{\gate}[3]{ %
+%   \node (#1) [rectangle,draw,dashed, inner sep=2pt, fit=#2]{};
+% }
 
-\tikzstyle{initial by diamond}=[shape=diamond]
-
-
-\tikzoption{initial text}{\tikzaddafternodepathoption{\def\tikz@initial@text{#1}}}
-\tikzoption{accepting text}{\tikzaddafternodepathoption{\def\tikz@accepting@text{#1}}}
-
-\tikzoption{initial where}{\tikzaddafternodepathoption{\csname tikz@initial@compute@#1\endcsname}}
-\tikzoption{accepting where}{\tikzaddafternodepathoption{\csname tikz@accepting@compute@#1\endcsname}}
-
-\tikzoption{initial distance}{\tikzaddafternodepathoption{\def\tikz@initial@distance{#1}}}
-\tikzoption{accepting distance}{\tikzaddafternodepathoption{\def\tikz@accepting@distance{#1}}}
-
-\def\tikz@initial@text{start}
-\def\tikz@accepting@text{}
-
-\def\tikz@initial@distance{3ex}
-\def\tikz@accepting@distance{3ex}
-
-\def\tikz@initial@compute@above{\def\tikz@initial@angle{90}\def\tikz@initial@anchor{south}}
-\def\tikz@initial@compute@below{\def\tikz@initial@angle{270}\def\tikz@initial@anchor{north}}
-\def\tikz@initial@compute@left{\def\tikz@initial@angle{180}\def\tikz@initial@anchor{east}}
-\def\tikz@initial@compute@right{\def\tikz@initial@angle{0}\def\tikz@initial@anchor{west}}
-
-\def\tikz@initial@angle{180}
-\def\tikz@initial@anchor{east}
-
-\def\tikz@accepting@compute@above{\def\tikz@accepting@angle{90}\def\tikz@accepting@anchor{south}}
-\def\tikz@accepting@compute@below{\def\tikz@accepting@angle{270}\def\tikz@accepting@anchor{north}}
-\def\tikz@accepting@compute@left{\def\tikz@accepting@angle{180}\def\tikz@accepting@anchor{east}}
-\def\tikz@accepting@compute@right{\def\tikz@accepting@angle{0}\def\tikz@accepting@anchor{west}}
-
-\def\tikz@accepting@angle{0}
-\def\tikz@accepting@anchor{west}
-
-
-\tikzstyle{initial above}=        [initial by arrow,initial where=above]
-\tikzstyle{initial below}=        [initial by arrow,initial where=below]
-\tikzstyle{initial left}=         [initial by arrow,initial where=left]
-\tikzstyle{initial right}=        [initial by arrow,initial where=right]
-
-\tikzstyle{accepting above}=      [accepting by arrow,accepting where=above]
-\tikzstyle{accepting below}=      [accepting by arrow,accepting where=below]
-\tikzstyle{accepting left}=       [accepting by arrow,accepting where=left]
-\tikzstyle{accepting right}=      [accepting by arrow,accepting where=right]
+% %shapename,  fitlist1, fitlist2, caption1, caption2
+% \newcommand{\vertgate}[5]{ %
+%   \begin{pgfonlayer}{b}
+%     \node (invisgateleft#1) [rectangle, draw, color=white, fit=#2]
+%     {}; %
+%     \node (invisgateright#1) [rectangle, draw, color=white, fit=#4]
+%     {}; %
+%   \end{pgfonlayer}
+%   \node (gatecaptleft#1) [ above left=0 pt of invisgateleft#1.north
+%   east, xshift=1pt ]{\footnotesize{#3}} ; %
+%   \node (gatecaptright#1) [ above right=0 pt of invisgateright#1.north
+%   west, xshift=-1pt ] {\footnotesize{#5}}; %
+%   \node (#1) [rectangle,draw,dashed, inner sep=2pt,
+%   fit=(invisgateleft#1)(gatecaptleft#1)(invisgateright#1)(gatecaptright#1)]{}; %
+%   \draw [-, dashed] (#1.north) -- (#1.south); %
+% }
 
 
-% Defaults:
+% \newcommand{\vertgateSpec}[5]{
+%   \begin{pgfonlayer}{b}
+%     \node (invisgateleft#1) [rectangle, draw, color=white,  fit=#2] {}; %
+%     \node (invisgateright#1) [rectangle, draw, color=white,  fit=#4] {}; %
+%   \end{pgfonlayer}
+%   \node (gatecaptleft#1) [ above left=0 pt of invisgateleft#1.north
+%   east, xshift=1pt ]{\footnotesize{#3}}; %
+%   \node (gatecaptright#1) [ above right=0 pt of invisgateright#1.north
+%   west, xshift=-1pt ] {\footnotesize{#5}}; %
+%   \node (#1) [rectangle,draw,dashed, inner sep=2pt,
+%   fit=(invisgateleft#1)(gatecaptleft#1)(invisgateright#1)(gatecaptright#1)]{}; %
+%   \draw [-, dashed] (#1.70) -- (#1.290); %
+% }
 
-\tikzstyle{state}=                [state without output]
-\tikzstyle{accepting}=            [accepting by double]
-\tikzstyle{initial}=              [initial by arrow]
+% \newcommand{\horgate}[5]{
+%   \begin{pgfonlayer}{b}
+%     \node (invisgateleft#1) [rectangle, draw, color=white, fit=#2]
+%     {}; %
+%     \node (invisgateright#1) [rectangle, draw, color=white, fit=#4]
+%     {}; %
+%   \end{pgfonlayer}
+%   \node (gatecaptleft#1) [ above right=0 pt of invisgateleft#1.south
+%   west, xshift=1pt ]{\footnotesize{#3}}; %
+%   \node (gatecaptright#1) [ below right=0 pt of invisgateright#1.north
+%   west, xshift=-1pt ] {\footnotesize{#5}}; %
+%   \node (#1) [rectangle,draw,dashed, inner sep=2pt,
+%   fit=(invisgateleft#1)(gatecaptleft#1)(invisgateright#1)(gatecaptright#1)]{}; %
+%   \draw [-, dashed] (#1.west) -- (#1.east); %
+% }
+
+% \newcommand{\horogate}[5]{
+%   \begin{pgfonlayer}{b}
+%     \node (invisgateleft#1) [rectangle, draw, color=white, fit=#2]
+%     {}; %
+%     \node (invisgateright#1) [rectangle, draw, color=white, fit=#4]
+%     {}; %
+%   \end{pgfonlayer}
+%   \node (#1) [rectangle,draw,dashed, inner sep=2pt,
+%   fit=(invisgateleft#1)(invisgateright#1)]{}; %
+%   \node (gatecaptleft#1) [ above right=0 pt of #1.west, xshift=0pt
+%   ]{\footnotesize{#3}}; %
+%   \node (gatecaptright#1) [ below right=0 pt of #1.west, xshift=0pt ]
+%   {\footnotesize{#5}}; %
+%   \draw [-, dashed] (#1.west) -- (#1.east); %
+% }
 
 
+% \newcommand{\vertogate}[5]{
+%   \begin{pgfonlayer}{b}
+%     \node (invisgateleft#1) [rectangle, draw, color=white, fit=#2]
+%     {}; %
+%     \node (invisgateright#1) [rectangle, draw, color=white, fit=#4]
+%     {}; %
+%   \end{pgfonlayer}
+%   \node (#1) [rectangle,draw,dashed, inner sep=2pt,
+%   fit=(invisgateleft#1)(invisgateright#1)]{}; %
+%   \node (gatecaptleft#1) [ below left=0 pt of #1.north, xshift=0pt
+%   ]{\footnotesize{#3}}; %
+%   \node (gatecaptright#1) [ below right=0 pt of #1.north, xshift=0pt ]
+%   {\footnotesize{#5}}; %
+%   \draw [-, dashed] (#1.north) -- (#1.south); %
+% }
 
-\endinput
+% \endinput
+
