@@ -54,14 +54,14 @@ and see the resulting PDF file example.pdf.
 Example
 -------
 
-.. figure:: https://raw.github.com/jluttine/latex-bayesnet/master/model-pca.png
+.. figure:: https://raw.github.com/jluttine/tikz-bayesnet/master/model-pca.png
    :scale: 50 %
    :align: center
    :alt: Bayesian network.
 
    A simple Bayesian network.
 
-.. figure:: https://raw.github.com/jluttine/latex-bayesnet/master/model-citation-influence.png
+.. figure:: https://raw.github.com/jluttine/tikz-bayesnet/master/model-citation-influence.png
    :scale: 50 %
    :align: center
    :alt: Citation influence model
