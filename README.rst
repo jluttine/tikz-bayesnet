@@ -1,37 +1,11 @@
 BayesNet
 ========
 
-LaTeX package for drawing graphical models (Bayesian networks) and
-factor graphs with TikZ.
+TikZ library for drawing Bayesian networks and (directed) factor
+graphs in LaTeX.
 
 Contents
 --------
-
-Provides the following commands:
-
-* :code:`\plate`
-
-* :code:`\shiftedplate`
-
-* :code:`\twofactor`
-
-* :code:`\factor`
-
-* :code:`\nofactor`
-
-* :code:`\namedgate`
-
-* :code:`\gate`
-
-* :code:`\vertgate`
-
-* :code:`\vertgateSpec`
-
-* :code:`\horgate`
-
-* :code:`\horogate`
-
-* :code:`\vertogate`
 
 Provides the following node styles:
 
@@ -43,15 +17,31 @@ Provides the following node styles:
 
 * :code:`factor`
 
+Provides the following commands:
+
+* :code:`\factor`
+
+* :code:`\plate`
+
+* :code:`\gate`
+
+* :code:`\vertgate`
+
+* :code:`\edge`
+
+* :code:`\factoredge`
+
 Usage
 -----
 
-Install the package bayesnet.sty to your LaTeX system or copy the file
-into projects that are using it.  To use the package in your LaTeX file
+Install the package by copying tikzlibrarybayesnet.code.tex to your
+LaTeX system or copy the file into projects that are using it.  To use
+the library in your LaTeX file
 
 .. code-block::
 
-   \usepackage{bayesnet}
+   \usepackage{tikz}
+   \usetikzlibrary{bayesnet}
 
 Compile the LaTeX example:
 
@@ -74,7 +64,7 @@ Example
 Related projects
 ----------------
 
-This package is derived from a technical report "Directed Factor Graph
+This library is derived from a technical report "Directed Factor Graph
 Notation for Generative Models" and the accompanying TikZ macros by
 Laura Dietz 2010 (http://people.cs.umass.edu/~dietz/).
 
