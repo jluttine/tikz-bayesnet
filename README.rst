@@ -17,6 +17,10 @@ Provides the following node styles:
 
 * :code:`factor`
 
+* :code:`plate`
+
+* :code:`gate`
+
 Provides the following commands:
 
 * :code:`\factor`
@@ -26,6 +30,8 @@ Provides the following commands:
 * :code:`\gate`
 
 * :code:`\vgate`
+
+* :code:`\hgate`
 
 * :code:`\edge`
 

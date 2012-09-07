@@ -39,16 +39,9 @@ minimum size=20pt, font=\fontsize{10}{10}\selectfont, node distance=1]
 \tikzstyle{factor} = [rectangle, fill=black,minimum size=5pt, inner
 sep=0pt, node distance=0.4, font=\small]
 
-%\tikzstyle{label} += [font=\footnotesize]
-
-% Caption node?
-%\tikzstyle{caption} = [node distance=2pt]
-
-\tikzset{plates/.code={\text{Hello world!}}}
-
 % Plate node
 \tikzstyle{plate} = [draw, rectangle, rounded corners, fit=#1]
-% Constant node
+% Invisible wrapper node
 \tikzstyle{wrap} = [inner sep=0pt, fit=#1]
 % Gate
 \tikzstyle{gate} = [draw, rectangle, dashed, fit=#1]
@@ -61,9 +54,9 @@ below left=5pt and 0pt of #1.south east] %
 
 \tikzset{>={triangle 45}}
 
-\pgfdeclarelayer{b}
-\pgfdeclarelayer{f}
-\pgfsetlayers{b,main,f}
+%\pgfdeclarelayer{b}
+%\pgfdeclarelayer{f}
+%\pgfsetlayers{b,main,f}
 
 \newcommand{\factoredge}[4][]{ %
   % Connect all nodes #2 to all nodes #4 via all factors #3.
@@ -106,6 +99,8 @@ below left=5pt and 0pt of #1.south east] %
   } ;%
 }
 
+% name, fitlist-left, caption-left, fitlist-right, caption-right,
+% inputs
 \newcommand{\vgate}[6]{ %
   % Wrap the left and right parts
   \node[wrap=#2] (#1-left) {}; %
@@ -122,7 +117,27 @@ below left=5pt and 0pt of #1.south east] %
   % Draw inputs
   \foreach \x in {#6} { %
     \draw [-*,thick] (\x) -- (#1); %
-    %\draw [-*,thick] (\x) -- (#1.north); %
+  } ;%
+}
+
+% name, fitlist-top, caption-top, fitlist-bottom, caption-bottom,
+% inputs
+\newcommand{\hgate}[6]{ %
+  % Wrap the left and right parts
+  \node[wrap=#2] (#1-top) {}; %
+  \node[wrap=#4] (#1-bottom) {}; %
+  % Draw the gate
+  \node[gate=(#1-top)(#1-bottom)] (#1) {}; %
+  % Add captions
+  \node[caption, above right=of #1.west ] (#1-top-caption)
+  {#3}; %
+  \node[caption, below right=of #1.west ] (#1-bottom-caption)
+  {#5}; %
+  % Draw middle separation
+  \draw [-, dashed] (#1.west) -- (#1.east); %
+  % Draw inputs
+  \foreach \x in {#6} { %
+    \draw [-*,thick] (\x) -- (#1); %
   } ;%
 }
 
@@ -284,4 +299,3 @@ below left=5pt and 0pt of #1.south east] %
 % }
 
 % \endinput
-
