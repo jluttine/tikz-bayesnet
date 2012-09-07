@@ -61,6 +61,16 @@ Compile the LaTeX example:
 
 and see the resulting PDF file example.pdf.
 
+Example
+-------
+
+.. figure:: model-citation-influence.png
+   :scale: 50 %
+   :alt: Citation influence model
+
+   Citation influence model.
+
+
 Related projects
 ----------------
 
