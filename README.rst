@@ -54,6 +54,13 @@ and see the resulting PDF file example.pdf.
 Example
 -------
 
+.. figure:: https://raw.github.com/jluttine/latex-bayesnet/master/model-pca.png
+   :scale: 50 %
+   :align: center
+   :alt: PCA model
+
+   Bayesian network of the PCA model.
+
 .. figure:: https://raw.github.com/jluttine/latex-bayesnet/master/model-citation-influence.png
    :scale: 50 %
    :align: center
