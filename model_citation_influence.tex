@@ -1,0 +1,115 @@
+
+% Citation influence model
+
+\beginpgfgraphicnamed{model-citation-influence}
+\begin{tikzpicture}
+
+  % Layout the variables
+  \matrix[row sep=0.5cm, column sep=1.2cm] (LDA)
+  { %
+    & %
+    & %
+    \node[latent] (gamma)  {$\gamma$} ; & %
+    \node[latent] (lambda) {$\lambda$} ; & %
+    \node[latent] (psi)    {$\psi$} ; %
+    \\
+    \\
+    \node[latent] (theta)  {$\theta$} ; & %
+    & %
+    \node[latent] (C)      {$C$} ; & %
+    \node[latent] (S)      {$S$} ; & %
+    \\
+    & %
+    & %
+    \factor       {T-f1}   {Multi} ; & %
+    & %
+    \factor       {T-f2}   {below:Multi} ; & %
+    \\
+    \node[latent] (T')     {$T'$} ; & %
+    & %
+    \node[latent] (T)      {$T$} ; & %
+    \\
+    \factor       {W'-f}   {Multi} ; & %
+    \node[latent] (phi)    {$\phi$} ; & %
+    \factor       {W-f}    {Multi} ; %
+    \\
+    \node[obs] (W')        {$W'$} ; & %
+    & %
+    \node[obs] (W)         {$W$} ;
+    \\
+  };
+
+  % Remaining factors
+  \factor[above=of T']     {T'-f}     {left:Multi} ; %
+  \factor[above=of theta]  {theta-f}  {left:Dir} ; %
+  \factor[above=of C]      {C-f}      {left:Multi} ; %
+  \factor[above=of S]      {S-f}      {left:Bern} ; %
+  \factor[above=of gamma]  {gamma-f}  {left:Dir} ; %
+  \factor[above=of lambda] {lambda-f} {left:Beta} ; %
+  \factor[above=of psi]    {psi-f}    {left:Dir} ; %
+  \factor[above=of phi]    {phi-f}    {left:Dir} ; %
+
+  % Hyperparameters
+  \node[const, above=of theta]  (atheta)  {$\alpha_\theta$}; %
+  \node[const, above=of phi]    (aphi)    {$\alpha_\phi$}; %
+  \node[const, above=of gamma]  (agamma)  {$\alpha_\gamma$}; %
+  \node[const, above=of lambda, xshift=-0.5cm] (alambda1)
+  {$\alpha_{\lambda_\theta}$}; %
+  \node[const, above=of lambda, xshift=0.5cm] (alambda2)
+  {$\alpha_{\lambda_\psi}$}; %
+  \node[const, above=of psi]    (apsi)    {$\alpha_\psi$}; %
+
+  % Factor connections
+  \factoredge {phi}               {W'-f}     {W'} ; %
+  \factoredge {phi}               {W-f}      {W} ; %
+  \factoredge {theta}             {T'-f}     {T'} ; %
+  \factoredge {theta}             {T-f1}     {T} ; %
+  \factoredge {psi}               {T-f2}     {T} ; %
+  \factoredge {atheta}            {theta-f}  {theta} ; %
+  \factoredge {gamma}             {C-f}      {C} ; %
+  \factoredge {lambda}            {S-f}      {S} ; %
+  \factoredge {agamma}            {gamma-f}  {gamma} ; %
+  \factoredge {alambda1,alambda2} {lambda-f} {lambda} ; %
+  \factoredge {apsi}              {psi-f}    {psi} ; %
+  \factoredge {aphi}              {phi-f}    {phi} ; %
+
+  % Gates
+  \gate[W'-gate] {(W'-f)(W'-f-caption)} {T'} ; %
+  \gate[W-gate]  {(W-f)(W-f-caption)}   {T} ; %
+  \gate[T-gate]  {(T-f1)(T-f1-caption)} {C} ;
+  \vgate {T-vgate} %
+  {(T-gate)} {$S=0$} %
+  {(T-f2)(T-f2-caption)} {$S=1$} %
+  {S} ; %
+
+  % Plates
+  \plate[LDA1] { %
+    (T')(T'-f)(T'-f-caption) %
+    (W')(W'-gate) %
+  } {$\forall w' \in c$} ; %
+
+  \plate[LDA2] { %
+    (LDA1) %
+    (theta)(theta-f)(theta-f-caption) %
+  } {$\forall c \in \mathcal{C}$} ; %
+
+  \plate { %
+    (phi)(phi-f)(phi-f-caption) %
+  } {$\forall t \in \mathcal{T}$} ; %
+
+  \plate[P1] { %
+    (W)(W-gate) %
+    (T)(T-vgate) %
+    (C)(C-f)(C-f-caption) %
+    (S)(S-f)(S-f-caption) %
+  } {$\forall w \in d$} ;
+
+  \plate { %
+    (P1) %
+    (gamma)(gamma-f)(gamma-f-caption) %
+    (lambda)(lambda-f)(lambda-f-caption) %
+    (psi)(psi-f)(psi-f-caption) %
+  } {$\forall d \in \mathcal{D}$} ; %
+
+\end{tikzpicture}
+\endpgfgraphicnamed

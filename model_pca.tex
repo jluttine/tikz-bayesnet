@@ -1,0 +1,23 @@
+
+% PCA model
+
+\beginpgfgraphicnamed{model-pca}
+\begin{tikzpicture}
+
+
+  % Define nodes
+  \node[const]  (a) at (0,3) {$\alpha$};
+  \node[latent] (w) at (0,2) {$\mathbf{w}_n$};
+  \node[latent] (x) at (2,2) {$\mathbf{x}_n$};
+  \node[latent] (t) at (4,0) {$\tau$};
+  \node[obs]    (y) at (1,0) {$\mathbf{y}_n$};
+
+  % Connect the nodes
+  \edge {a} {w} ; %
+  \edge {x,w,t} {y} ; %
+
+  % Plates
+  \plate {(x)(y)(w)} {$n=1,\ldots,N$}
+
+\end{tikzpicture}
+\endpgfgraphicnamed
