@@ -17,9 +17,9 @@
 
 \documentclass[a4paper]{article}
 
-%\usepackage{bayesnet}
 \usepackage{tikz}
 \usetikzlibrary{bayesnet}
+\pgfrealjobname{example} % name of this file
 
 \title{Graphical Models in Tikz}
 \author{Laura Dietz, Jaakko Luttinen}
@@ -101,21 +101,7 @@ factor graphs.
 % Simple Bayesian network
 \begin{figure}[ht]
   \begin{center}
-    \begin{tikzpicture}
-      % Define nodes
-      \node[const]  (a) at (0,3) {$\alpha$};
-      \node[latent] (w) at (0,2) {$\mathbf{w}_n$};
-      \node[latent] (x) at (2,2) {$\mathbf{x}_n$};
-      \node[latent] (t) at (4,0) {$\tau$};
-      \node[obs]    (y) at (1,0) {$\mathbf{y}_n$};
-
-      % Connect the nodes
-      \edge {a} {w} ; %
-      \edge {x,w,t} {y} ; %
-
-      % Plates
-      \plate {(x)(y)(w)} {$n=1,\ldots,N$}
-    \end{tikzpicture}
+    \input{model_pca}
   \end{center}
   \caption{A simple Bayesian network.}
 \end{figure}
@@ -123,173 +109,18 @@ factor graphs.
 % Latent Dirichlet allocation
 \begin{figure}[ht]
   \begin{center}
-    \begin{tikzpicture}[x=1.7cm,y=1.8cm]
-
-      % Nodes
-
-      \node[obs]                   (X)      {$X$} ; %
-      \node[latent, above=of X]    (T)      {$T$} ; %
-      \node[latent, above=of T]    (theta)  {$\theta$}; %
-      \node[const, above=of theta] (atheta) {$\alpha_\theta$};
-
-
-      % Factors
-      \factor[above=of X]     {X-f}     {Multi} ; %
-      \factor[above=of T]     {T-f}     {left:Multi} ; %
-      \factor[above=of theta] {theta-f} {left:Dir} ; %
-
-      % More nodes
-      \node[latent, right=of X-f] (phi)  {$\phi$}; %
-      \node[const, above=of phi]  (aphi) {$\alpha_\phi$}; %
-
-      \factor[above=of phi] {phi-f} {right:Dir} ; %
-
-      \factoredge {theta}  {T-f}     {T} ; %
-      \factoredge {atheta} {theta-f} {theta} ; %
-      \factoredge {phi}    {X-f}     {X} ; %
-      \factoredge {aphi}   {phi-f}   {phi} ; %
-
-      \gate[X-gate] {(X-f)(X-f-caption)} {T}
-
-      \plate[plate1] { %
-        (X)(X-gate) %
-        (T)(T-f)(T-f-caption) %
-      } {$\forall 1 \leq i \leq n_d$}; %
-      \plate { %
-        (plate1) %
-        (theta)(theta-f)(theta-f-caption) %
-      } {$\forall d \in \mathcal{D}$} ; %
-      \plate { %
-        (phi)(phi-f)(phi-f-caption) %
-      } {$\forall t \in \mathcal{T}$} ; %
-      
-    \end{tikzpicture}
-
+    \input{model_lda}
   \end{center}
-
   \caption{Latent Dirichlet allocation as directed factor graph.}
-
 \end{figure}
 
-% Latent Dirichlet allocation
+% Citation influence model
 \begin{figure}[ht]
   \begin{center}
-    \begin{tikzpicture}
-
-      % Layout the variables
-      \matrix[row sep=0.5cm, column sep=1.2cm] (LDA)
-      { %
-        & %
-        & %
-        \node[latent] (gamma)  {$\gamma$} ; & %
-        \node[latent] (lambda) {$\lambda$} ; & %
-        \node[latent] (psi)    {$\psi$} ; %
-        \\
-        \\
-        \node[latent] (theta)  {$\theta$} ; & %
-        & %
-        \node[latent] (C)      {$C$} ; & %
-        \node[latent] (S)      {$S$} ; & %
-        \\
-        & %
-        & %
-        \factor       {T-f1}   {Multi} ; & %
-        & %
-        \factor       {T-f2}   {below:Multi} ; & %
-        \\
-        \node[latent] (T')     {$T'$} ; & %
-        & %
-        \node[latent] (T)      {$T$} ; & %
-        \\
-        \factor       {W'-f}   {Multi} ; & %
-        \node[latent] (phi)    {$\phi$} ; & %
-        \factor       {W-f}    {Multi} ; %
-        \\
-        \node[obs] (W')        {$W'$} ; & %
-        & %
-        \node[obs] (W)         {$W$} ;
-        \\
-      };
-
-      % Remaining factors
-      \factor[above=of T']     {T'-f}     {left:Multi} ; %
-      \factor[above=of theta]  {theta-f}  {left:Dir} ; %
-      \factor[above=of C]      {C-f}      {left:Multi} ; %
-      \factor[above=of S]      {S-f}      {left:Bern} ; %
-      \factor[above=of gamma]  {gamma-f}  {left:Dir} ; %
-      \factor[above=of lambda] {lambda-f} {left:Beta} ; %
-      \factor[above=of psi]    {psi-f}    {left:Dir} ; %
-      \factor[above=of phi]    {phi-f}    {left:Dir} ; %
-
-      % Hyperparameters
-      \node[const, above=of theta]  (atheta)  {$\alpha_\theta$}; %
-      \node[const, above=of phi]    (aphi)    {$\alpha_\phi$}; %
-      \node[const, above=of gamma]  (agamma)  {$\alpha_\gamma$}; %
-      \node[const, above=of lambda, xshift=-0.5cm] (alambda1)
-      {$\alpha_{\lambda_\theta}$}; %
-      \node[const, above=of lambda, xshift=0.5cm] (alambda2)
-      {$\alpha_{\lambda_\psi}$}; %
-      \node[const, above=of psi]    (apsi)    {$\alpha_\psi$}; %
-
-      % Factor connections
-      \factoredge {phi}               {W'-f}     {W'} ; %
-      \factoredge {phi}               {W-f}      {W} ; %
-      \factoredge {theta}             {T'-f}     {T'} ; %
-      \factoredge {theta}             {T-f1}     {T} ; %
-      \factoredge {psi}               {T-f2}     {T} ; %
-      \factoredge {atheta}            {theta-f}  {theta} ; %
-      \factoredge {gamma}             {C-f}      {C} ; %
-      \factoredge {lambda}            {S-f}      {S} ; %
-      \factoredge {agamma}            {gamma-f}  {gamma} ; %
-      \factoredge {alambda1,alambda2} {lambda-f} {lambda} ; %
-      \factoredge {apsi}              {psi-f}    {psi} ; %
-      \factoredge {aphi}              {phi-f}    {phi} ; %
-
-      % Gates
-      \gate[W'-gate] {(W'-f)(W'-f-caption)} {T'} ; %
-      \gate[W-gate]  {(W-f)(W-f-caption)}   {T} ; %
-      \gate[T-gate]  {(T-f1)(T-f1-caption)} {C} ;
-      \vgate {T-vgate} %
-        {(T-gate)} {$S=0$} %
-        {(T-f2)(T-f2-caption)} {$S=1$} %
-        {S} ; %
-
-      % Plates
-      \plate[LDA1] { %
-        (T')(T'-f)(T'-f-caption) %
-        (W')(W'-gate) %
-      } {$\forall w' \in c$} ; %
-
-      \plate[LDA2] { %
-        (LDA1) %
-        (theta)(theta-f)(theta-f-caption) %
-      } {$\forall c \in \mathcal{C}$} ; %
-
-      \plate { %
-        (phi)(phi-f)(phi-f-caption) %
-      } {$\forall t \in \mathcal{T}$} ; %
-
-      \plate[P1] { %
-        (W)(W-gate) %
-        (T)(T-vgate) %
-        (C)(C-f)(C-f-caption) %
-        (S)(S-f)(S-f-caption) %
-      } {$\forall w \in d$} ;
-      
-      \plate { %
-        (P1) %
-        (gamma)(gamma-f)(gamma-f-caption) %
-        (lambda)(lambda-f)(lambda-f-caption) %
-        (psi)(psi-f)(psi-f-caption) %
-      } {$\forall d \in \mathcal{D}$} ; %
-
-    \end{tikzpicture} 
+    \input{model_citation_influence}
   \end{center}
-
   \caption{Citation influence model with own topics as directed factor
     graph.}
-  
 \end{figure}
-
 
 \end{document}
