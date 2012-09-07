@@ -55,7 +55,7 @@ Example
 -------
 
 .. figure:: https://raw.github.com/jluttine/latex-bayesnet/master/model-citation-influence.png
-   :scale: 10 %
+   :scale: 50 %
    :align: center
    :alt: Citation influence model
 
