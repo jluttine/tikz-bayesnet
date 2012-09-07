@@ -57,9 +57,9 @@ Example
 .. figure:: https://raw.github.com/jluttine/latex-bayesnet/master/model-pca.png
    :scale: 50 %
    :align: center
-   :alt: PCA model
+   :alt: Bayesian network.
 
-   Bayesian network of the PCA model.
+   A simple Bayesian network.
 
 .. figure:: https://raw.github.com/jluttine/latex-bayesnet/master/model-citation-influence.png
    :scale: 50 %
