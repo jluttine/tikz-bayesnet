@@ -55,7 +55,7 @@ Example
 -------
 
 .. image:: model-citation-influence.png
-   :scale: 50 %
+   :scale: 20 %
    :align: center
    :alt: Citation influence model
 
