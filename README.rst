@@ -54,18 +54,12 @@ and see the resulting PDF file example.pdf.
 Example
 -------
 
-.. image:: master/model-pca.png
-   :scale: 20 %
-   :align: center
-   :alt: Citation influence model
-
-
-.. figure:: master/model-citation-influence.png
+.. figure:: https://raw.github.com/jluttine/latex-bayesnet/master/model-citation-influence.png
    :scale: 50 %
    :align: center
    :alt: Citation influence model
 
-   Citation influence model.
+   Directed factor graph of the citation influence model.
 
 
 Related projects
