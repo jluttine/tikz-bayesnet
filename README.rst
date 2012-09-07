@@ -54,7 +54,7 @@ and see the resulting PDF file example.pdf.
 Example
 -------
 
-.. image:: model-citation-influence.png
+.. image:: model-pca.png
    :scale: 20 %
    :align: center
    :alt: Citation influence model
