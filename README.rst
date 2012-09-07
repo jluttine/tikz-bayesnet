@@ -25,7 +25,7 @@ Provides the following commands:
 
 * :code:`\gate`
 
-* :code:`\vertgate`
+* :code:`\vgate`
 
 * :code:`\edge`
 
