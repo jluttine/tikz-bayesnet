@@ -27,9 +27,8 @@
   \edge {x,w,t} {y} ; %
 
   % Plates
-  \node[fit=(x)(y), inner sep=6pt] (xy) {} ;
-  \plate {} {(xy)} {$N$} ;
-  \plate {} {(w)(y)} {$M$} ;
+  \plate {yx} {(x)(y)} {$N$} ;
+  \plate {} {(w)(y)(yx.north west)(yx.south west)} {$M$} ;
 
 \end{tikzpicture}
 %\endpgfgraphicnamed
