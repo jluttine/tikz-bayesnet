@@ -88,11 +88,10 @@ below left=5pt and 0pt of #1.south east] %
 % \factor [options] {name} {caption} {inputs} {outputs}
 \newcommand{\factor}[5][]{ %
   % Draw the factor node. Use alias to allow empty names.
-  \node[factor, label={[name=#2-caption]#3}, #1] (#2) {} ; %
-  %\node[factor, label={[name=#2-caption]#3}, name=#2, #1,
-  %alias=#2-alias] {} ; %
+  \node[factor, label={[name=#2-caption]#3}, name=#2, #1,
+  alias=#2-alias] {} ; %
   % Connect all inputs to outputs via this factor
-  %\factoredge {#4} {#2-alias} {#5} ; %
+  \factoredge {#4} {#2-alias} {#5} ; %
 }
 
 % \plate [options] {name} {fitlist} {caption}
