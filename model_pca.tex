@@ -15,10 +15,10 @@
 \begin{tikzpicture}
 
   % Define nodes
-  \node[obs]                             (y) {$y$};
+  \node[obs]                               (y) {$y$};
   \node[latent, above=of y, xshift=-1.2cm] (w) {$\mathbf{w}$};
   \node[latent, above=of y, xshift=1.2cm]  (x) {$\mathbf{x}$};
-  \node[latent, right=2cm of y]              (t) {$\tau$};
+  \node[latent, right=2cm of y]            (t) {$\tau$};
 
   % Connect the nodes
   \edge {x,w,t} {y} ; %

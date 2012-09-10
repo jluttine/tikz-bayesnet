@@ -24,15 +24,15 @@
 
 
   % Factors
-  \factor[above=of X]     {X-f}     {Multi} ; %
-  \factor[above=of T]     {T-f}     {left:Multi} ; %
-  \factor[above=of theta] {theta-f} {left:Dir} ; %
+  \factor[above=of X]     {X-f}     {Multi} {} {} ; %
+  \factor[above=of T]     {T-f}     {left:Multi} {} {} ; %
+  \factor[above=of theta] {theta-f} {left:Dir} {} {} ; %
 
   % More nodes
   \node[latent, right=of X-f] (phi)  {$\phi$}; %
   \node[const, above=of phi]  (aphi) {$\alpha_\phi$}; %
 
-  \factor[above=of phi] {phi-f} {right:Dir} ; %
+  \factor[above=of phi] {phi-f} {right:Dir} {} {} ; %
 
   \factoredge {theta}  {T-f}     {T} ; %
   \factoredge {atheta} {theta-f} {theta} ; %

@@ -70,7 +70,7 @@ factor graphs.
         \node[obs] (y) {$y$} ; %
         \node[latent, left=of y, yshift=0.5cm] (mu) {$\mu$} ; %
         \node[latent, left=of y, yshift=-0.5cm] (tau) {$\tau$} ; %
-        \factor[left=of y] {y-factor} {$\mathcal{N}$} ;
+        \factor[left=of y] {y-factor} {$\mathcal{N}$} {} {};
         \factoredge {mu,tau} {y-factor} {y} ; %
       }
       \\
@@ -87,10 +87,11 @@ factor graphs.
         % Nodes
         \node[obs]                    (k)   {$k$}; %
         \node[latent, above=2 of k]   (l)   {$\lambda$}; %
-        \factor[above=0.8 of k]       {k-f} {Multi} ; %
-        \node[latent, right=of k-f]   (p)   {$\phi$}; %
+        \factor[above=0.8 of k]       {k-f} {Multi} {} {}; %
+        \node[latent, right=of k-f]   (paa) {$\phi$}; %
+        %\node[latent, right=of k-f]   (p)   {$\phi$}; %
         % Connections
-        \factoredge {p} {k-f} {k} ; %
+        \factoredge {paa} {k-f} {k} ; %
         % Gate
         \gate {} {(k-f)(k-f-caption)} {l} ; %
       }

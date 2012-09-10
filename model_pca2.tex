@@ -29,18 +29,19 @@
   % W hyper
   \node[const, above=1.2 of w, xshift=-0.5cm] (mw) {$\mu_w$} ; %
   \node[const, above=1.2 of w, xshift=0.5cm]  (aw) {$\alpha_w$} ; %
-  \factor[above=of w] {w-f} {left:$\mathcal{N}$} ; %
+  \factor[above=of w] {w-f} {left:$\mathcal{N}$} {} {} ; %
   \factoredge {mw,aw} {w-f} {w} ;
 
   % X hyper
   \node[const, above=1.2 of x, xshift=-0.5cm] (mx) {$\mu_x$} ; %
   \node[const, above=1.2 of x, xshift=0.5cm]  (ax) {$\alpha_x$} ; %
-  \factor[above=of x] {x-f} {left:$\mathcal{N}$} ; %
+  \factor[above=of x] {x-f} {left:$\mathcal{N}$} {} {} ; %
   \factoredge {mx,ax} {x-f} {x} ;
 
   % noise
   \node[latent, right=3cm of y-f]         (t)   {$\tau$}; %
-  \factor[above=of t]                     {t-f} {left:$\mathcal{G}$}; %
+  \factor[above=of t]                     {t-f} {left:$\mathcal{G}$}
+  {} {} ; %
   \node[const, above=of t, xshift=-0.5cm] (at)  {$\alpha_\tau$} ; %
   \node[const, above=of t, xshift=0.5cm]  (bt)  {$\beta_\tau$} ; %
   \factoredge {at,bt} {t-f} {t} ; %

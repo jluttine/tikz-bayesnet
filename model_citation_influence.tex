@@ -36,17 +36,17 @@
     \\
     & %
     & %
-    \factor       {T-f1}   {Multi} ; & %
+    \factor       {T-f1}   {Multi} {} {}; & %
     & %
-    \factor       {T-f2}   {below:Multi} ; & %
+    \factor       {T-f2}   {below:Multi} {} {}; & %
     \\
     \node[latent] (T')     {$T'$} ; & %
     & %
     \node[latent] (T)      {$T$} ; & %
     \\
-    \factor       {W'-f}   {Multi} ; & %
+    \factor       {W'-f}   {Multi} {} {}; & %
     \node[latent] (phi)    {$\phi$} ; & %
-    \factor       {W-f}    {Multi} ; %
+    \factor       {W-f}    {Multi} {} {}; %
     \\
     \node[obs] (W')        {$W'$} ; & %
     & %
@@ -55,14 +55,14 @@
   };
 
   % Remaining factors
-  \factor[above=of T']     {T'-f}     {left:Multi} ; %
-  \factor[above=of theta]  {theta-f}  {left:Dir} ; %
-  \factor[above=of C]      {C-f}      {left:Multi} ; %
-  \factor[above=of S]      {S-f}      {left:Bern} ; %
-  \factor[above=of gamma]  {gamma-f}  {left:Dir} ; %
-  \factor[above=of lambda] {lambda-f} {left:Beta} ; %
-  \factor[above=of psi]    {psi-f}    {left:Dir} ; %
-  \factor[above=of phi]    {phi-f}    {left:Dir} ; %
+  \factor[above=of T']     {T'-f}     {left:Multi} {} {}; %
+  \factor[above=of theta]  {theta-f}  {left:Dir} {} {}; %
+  \factor[above=of C]      {C-f}      {left:Multi} {} {}; %
+  \factor[above=of S]      {S-f}      {left:Bern} {} {}; %
+  \factor[above=of gamma]  {gamma-f}  {left:Dir} {} {}; %
+  \factor[above=of lambda] {lambda-f} {left:Beta} {} {}; %
+  \factor[above=of psi]    {psi-f}    {left:Dir} {} {}; %
+  \factor[above=of phi]    {phi-f}    {left:Dir} {} {}; %
 
   % Hyperparameters
   \node[const, above=of theta]  (atheta)  {$\alpha_\theta$}; %
