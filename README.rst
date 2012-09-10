@@ -113,5 +113,7 @@ This work has the LPPL maintenance status `maintained'.
  
 The Current Maintainer of this work is Jaakko Luttinen.
 
-This work consists of the files bayesnet.sty and example.tex.
+This work consists of the files tikzlibrarybayesnet.code.tex,
+example.tex, model_pca.tex, model_pca2.tex, model_lda.tex,
+model_citation_influence.tex.
 
