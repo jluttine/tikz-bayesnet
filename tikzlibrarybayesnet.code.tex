@@ -47,6 +47,7 @@ sep=0pt, node distance=0.4, font=\small]
 \tikzstyle{wrap} = [inner sep=0pt, fit=#1]
 % Gate
 \tikzstyle{gate} = [draw, rectangle, dashed, fit=#1]
+
 % Caption node
 \tikzstyle{caption} = [font=\footnotesize, node distance=0] %
 \tikzstyle{plate caption} = [caption, node distance=0, inner sep=0pt,
@@ -60,6 +61,7 @@ below left=5pt and 0pt of #1.south east] %
 %\pgfdeclarelayer{f}
 %\pgfsetlayers{b,main,f}
 
+% \factoredge [options] {inputs} {factors} {outputs}
 \newcommand{\factoredge}[4][]{ %
   % Connect all nodes #2 to all nodes #4 via all factors #3.
   \foreach \f in {#3} { %
@@ -73,6 +75,7 @@ below left=5pt and 0pt of #1.south east] %
   %\draw[<-,#1] (#2) -- (#2-factor) edge[-] (#3) ;
 }
 
+% \edge [options] {inputs} {outputs}
 \newcommand{\edge}[3][]{ %
   % Connect all nodes #2 to all nodes #3.
   \foreach \x in {#2} { %
@@ -82,27 +85,28 @@ below left=5pt and 0pt of #1.south east] %
   } ;
 }
 
+% \factor [options] {name} {caption}
 \newcommand{\factor}[3][]{ %
   \node[factor, label={[name=#2-caption]#3}, #1] (#2) {} ;  %
 }
 
-% name, fitlist, caption
-\newcommand{\plate}[3][default]{ %
-  \node[wrap=#2] (#1-wrap) {}; %
-  \node[plate caption=#1-wrap] (#1-caption) {#3}; %
-  \node[plate=(#1-wrap)(#1-caption)] (#1) {}; %
+% \plate [options] {name} {fitlist} {caption}
+\newcommand{\plate}[4][]{ %
+  \node[wrap=#3] (#2-wrap) {}; %
+  \node[plate caption=#2-wrap] (#2-caption) {#4}; %
+  \node[plate=(#2-wrap)(#2-caption), #1] (#2) {}; %
 }
 
-% name,  fitlist, input
-\newcommand{\gate}[3][default]{ %
-  \node[rectangle,draw,dashed, inner sep=2pt, fit=#2] (#1) {}; %
-  \foreach \x in {#3} { %
-    \draw [-*,thick] (\x) -- (#1); %
+% \gate [options] {name} {fitlist} {inputs}
+\newcommand{\gate}[4][]{ %
+  \node[gate=#3, #1] (#2) {}; %
+  \foreach \x in {#4} { %
+    \draw [-*,thick] (\x) -- (#2); %
   } ;%
 }
 
-% name, fitlist-left, caption-left, fitlist-right, caption-right,
-% inputs
+% \vgate {name} {fitlist-left} {caption-left} {fitlist-right}
+% {caption-right} {inputs}
 \newcommand{\vgate}[6]{ %
   % Wrap the left and right parts
   \node[wrap=#2] (#1-left) {}; %
@@ -122,8 +126,8 @@ below left=5pt and 0pt of #1.south east] %
   } ;%
 }
 
-% name, fitlist-top, caption-top, fitlist-bottom, caption-bottom,
-% inputs
+% \hgate {name} {fitlist-top} {caption-top} {fitlist-bottom}
+% {caption-bottom} {inputs}
 \newcommand{\hgate}[6]{ %
   % Wrap the left and right parts
   \node[wrap=#2] (#1-top) {}; %

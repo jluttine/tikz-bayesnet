@@ -83,7 +83,7 @@ factor graphs.
       \texttt{\textbackslash plate} &
       \tikz{ %
         \node[latent] (x) {$x_m$}; %
-        \plate {(x)} {$m \in \mathcal{M}$}; %
+        \plate {} {(x)} {$m \in \mathcal{M}$}; %
       }
       \\
       Gate &
@@ -97,7 +97,7 @@ factor graphs.
         % Connections
         \factoredge {p} {k-f} {k} ; %
         % Gate
-        \gate {(k-f)(k-f-caption)} {l};
+        \gate {_} {(k-f)(k-f-caption)} {l} ; %
       }
     \end{tabular}
   \end{center}

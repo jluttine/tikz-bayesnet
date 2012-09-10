@@ -4,7 +4,6 @@
 %\beginpgfgraphicnamed{model-pca}
 \begin{tikzpicture}
 
-
   % Define nodes
   \node[obs]                             (y) {$y$};
   \node[latent, above=of y, xshift=-1.2cm] (w) {$\mathbf{w}$};
@@ -16,8 +15,8 @@
 
   % Plates
   \node[fit=(x)(y), inner sep=6pt] (xy) {} ;
-  \plate {(xy)} {$N$} ;
-  \plate {(w)(y)} {$M$} ;
+  \plate {} {(xy)} {$N$} ;
+  \plate {} {(w)(y)} {$M$} ;
 
 \end{tikzpicture}
 %\endpgfgraphicnamed

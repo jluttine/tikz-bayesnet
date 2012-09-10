@@ -74,37 +74,37 @@
   \factoredge {aphi}              {phi-f}    {phi} ; %
 
   % Gates
-  \gate[W'-gate] {(W'-f)(W'-f-caption)} {T'} ; %
-  \gate[W-gate]  {(W-f)(W-f-caption)}   {T} ; %
-  \gate[T-gate]  {(T-f1)(T-f1-caption)} {C} ;
+  \gate {W'-gate} {(W'-f)(W'-f-caption)} {T'} ; %
+  \gate {W-gate}  {(W-f)(W-f-caption)}   {T} ; %
+  \gate {T-gate}  {(T-f1)(T-f1-caption)} {C} ;
   \vgate {T-vgate} %
   {(T-gate)} {$S=0$} %
   {(T-f2)(T-f2-caption)} {$S=1$} %
   {S} ; %
 
   % Plates
-  \plate[LDA1] { %
+  \plate {LDA1} { %
     (T')(T'-f)(T'-f-caption) %
     (W')(W'-gate) %
   } {$\forall w' \in c$} ; %
 
-  \plate[LDA2] { %
+  \plate {LDA2} { %
     (LDA1) %
     (theta)(theta-f)(theta-f-caption) %
   } {$\forall c \in \mathcal{C}$} ; %
 
-  \plate { %
+  \plate {} { %
     (phi)(phi-f)(phi-f-caption) %
   } {$\forall t \in \mathcal{T}$} ; %
 
-  \plate[P1] { %
+  \plate {P1} { %
     (W)(W-gate) %
     (T)(T-vgate) %
     (C)(C-f)(C-f-caption) %
     (S)(S-f)(S-f-caption) %
   } {$\forall w \in d$} ;
 
-  \plate { %
+  \plate {} { %
     (P1) %
     (gamma)(gamma-f)(gamma-f-caption) %
     (lambda)(lambda-f)(lambda-f-caption) %
@@ -113,3 +113,8 @@
 
 \end{tikzpicture}
 %\endpgfgraphicnamed
+
+%%% Local Variables: 
+%%% mode: tex-pdf
+%%% TeX-master: "example"
+%%% End: 

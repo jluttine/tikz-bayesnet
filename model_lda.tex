@@ -28,19 +28,24 @@
   \factoredge {phi}    {X-f}     {X} ; %
   \factoredge {aphi}   {phi-f}   {phi} ; %
 
-  \gate[X-gate] {(X-f)(X-f-caption)} {T}
+  \gate {X-gate} {(X-f)(X-f-caption)} {T}
 
-  \plate[plate1] { %
+  \plate {plate1} { %
     (X)(X-gate) %
     (T)(T-f)(T-f-caption) %
   } {$\forall 1 \leq i \leq n_d$}; %
-  \plate { %
+  \plate {} { %
     (plate1) %
     (theta)(theta-f)(theta-f-caption) %
   } {$\forall d \in \mathcal{D}$} ; %
-  \plate { %
+  \plate {} { %
     (phi)(phi-f)(phi-f-caption) %
   } {$\forall t \in \mathcal{T}$} ; %
 
 \end{tikzpicture}
 %\endpgfgraphicnamed
+
+%%% Local Variables: 
+%%% mode: tex-pdf
+%%% TeX-master: "example"
+%%% End: 
