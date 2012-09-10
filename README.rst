@@ -25,7 +25,7 @@ Provides the following node styles:
 
 Provides the following commands:
 
-* :code:`\factor [options] {name} {caption}`
+* :code:`\factor [options] {name} {caption} {inputs} {outputs}`
 
 * :code:`\plate [options] {name} {fitlist} {caption}`
 
