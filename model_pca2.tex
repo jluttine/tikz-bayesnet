@@ -1,0 +1,65 @@
+
+% PCA model
+
+%\beginpgfgraphicnamed{model-pca}
+\begin{tikzpicture}
+
+  % Define nodes
+
+  % Y
+  \node[obs]                               (y) {$y$}; %
+  \factor[above=of y] {y-f} {left:$\mathcal{N}$} ; %
+
+  % W and X
+  \node[det, above=of y-f]                   (wx) {dot} ; % 
+  \node[latent, above=of wx, xshift=-1.5cm] (w) {$\mathbf{w}$}; %
+  \node[latent, above=of wx, xshift=1.5cm]  (x) {$\mathbf{x}$}; %
+
+  % W hyper
+  \node[const, above=1.2 of w, xshift=-0.5cm] (mw) {$\mu_w$} ; %
+  \node[const, above=1.2 of w, xshift=0.5cm] (aw) {$\alpha_w$} ; %
+  \factor[above=of w] {w-f} {left:$\mathcal{N}$} ; %
+  \factoredge {mw,aw} {w-f} {w} ;
+
+  % X hyper
+  \node[const, above=1.2 of x, xshift=-0.5cm] (mx) {$\mu_x$} ; %
+  \node[const, above=1.2 of x, xshift=0.5cm] (ax) {$\alpha_x$} ; %
+  \factor[above=of x] {x-f} {left:$\mathcal{N}$} ; %
+  \factoredge {mx,ax} {x-f} {x} ;
+
+  % noise
+  \node[latent, right=3cm of y-f]         (t)   {$\tau$}; %
+  \factor[above=of t]                     {t-f} {left:$\mathcal{G}$}; %
+  \node[const, above=of t, xshift=-0.5cm] (at)  {$\alpha_\tau$} ; %
+  \node[const, above=of t, xshift=0.5cm]  (bt)  {$\beta_\tau$} ; %
+  \factoredge {at,bt} {t-f} {t} ; %
+
+  % Connect the nodes
+  \edge[-] {w,x} {wx} ;
+  \factoredge {wx,t} {y-f} {y} ; %
+  %\edge {a} {w} ; %
+  %\edge {x,w,t} {y} ; %
+
+  % Plates
+  \node[fit=%
+    (y)(y-f)(y-f-caption) %
+    (x)(x-f)(x-f-caption) %
+    (wx), %
+    inner sep=6pt] (xy) {} ;
+  \plate { %
+    (xy) %
+  } {$N$} ;
+  \plate {%
+    (y)(y-f)(y-f-caption) %
+    (w)(w-f)(w-f-caption) %
+    (wx) %
+  } {$M$} ;
+
+\end{tikzpicture}
+%\endpgfgraphicnamed
+
+%%% Local Variables: 
+%%% mode: tex-pdf
+%%% TeX-master: "example"
+%%% End: 
+

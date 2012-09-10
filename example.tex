@@ -51,6 +51,12 @@ factor graphs.
         \node[obs] {$y$}; %
       }
       \\
+      Deterministic &
+      \texttt{\textbackslash node[det]} &
+      \tikz{ %
+        \node[det] {dot} ; %
+      }
+      \\
       Constant &
       \texttt{\textbackslash node[const]} &
       \tikz{ %
@@ -101,9 +107,13 @@ factor graphs.
 % Simple Bayesian network
 \begin{figure}[ht]
   \begin{center}
-    \input{model_pca}
+    \begin{tabular}{cc}
+      \input{model_pca} &
+      \input{model_pca2}
+    \end{tabular}
   \end{center}
-  \caption{A simple Bayesian network.}
+  \caption{PCA model as a Bayesian network and a directed factor
+    graph.}
 \end{figure}
 
 % Latent Dirichlet allocation

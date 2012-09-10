@@ -13,6 +13,8 @@ Provides the following node styles:
 
 * :code:`obs`
 
+* :code:`det`
+
 * :code:`const`
 
 * :code:`factor`
