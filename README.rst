@@ -23,7 +23,8 @@ Provides the following node styles:
 
 * :code:`gate`
 
-Provides the following commands:
+Provides the following commands (note that any of the arguments can be
+empty):
 
 * :code:`\factor [options] {name} {caption} {inputs} {outputs}`
 
