@@ -25,19 +25,21 @@ Provides the following node styles:
 
 Provides the following commands:
 
-* :code:`\factor`
+* :code:`\factor [options] {name} {caption}`
 
-* :code:`\plate`
+* :code:`\plate [options] {name} {fitlist} {caption}`
 
-* :code:`\gate`
+* :code:`\gate [options] {name} {fitlist} {inputs}`
 
-* :code:`\vgate`
+* :code:`\vgate {name} {fitlist-left} {caption-left} {fitlist-right}
+  {caption-right} {inputs}`
 
-* :code:`\hgate`
+* :code:`\hgate {name} {fitlist-top} {caption-top} {fitlist-bottom}
+  {caption-bottom} {inputs}`
 
-* :code:`\edge`
+* :code:`\edge [options] {inputs} {outputs}`
 
-* :code:`\factoredge`
+* :code:`\factoredge [options] {inputs} {factors} {outputs}`
 
 Usage
 -----
