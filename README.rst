@@ -62,14 +62,14 @@ and see the resulting PDF file example.pdf.
 Example
 -------
 
-.. figure:: https://raw.github.com/jluttine/tikz-bayesnet/master/model-pca.png
+.. figure:: http://i.imgur.com/CzNyk.png
    :scale: 50 %
    :align: center
    :alt: Bayesian network.
 
-   A simple Bayesian network.
+   PCA model as a Bayesian network and a directed factor graph.
 
-.. figure:: https://raw.github.com/jluttine/tikz-bayesnet/master/model-citation-influence.png
+.. figure:: http://i.imgur.com/CBZqL.png
    :scale: 50 %
    :align: center
    :alt: Citation influence model
