@@ -99,9 +99,9 @@ below left=5pt and 0pt of #1.south east] %
 
 % \gate [options] {name} {fitlist} {inputs}
 \newcommand{\gate}[4][]{ %
-  \node[gate=#3, #1] (#2) {}; %
+  \node[gate=#3, name=#2, #1, alias=#2-alias] {}; %
   \foreach \x in {#4} { %
-    \draw [-*,thick] (\x) -- (#2); %
+    \draw [-*,thick] (\x) -- (#2-alias); %
   } ;%
 }
 
