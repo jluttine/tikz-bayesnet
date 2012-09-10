@@ -19,6 +19,7 @@
 
   % Y
   \node[obs]          (y)   {$y$}; %
+  \factor[above=of y] {y-f} {left:$\mathcal{N}$} {} {} ; %
 
   % W and X
   \node[det, above=of y]            (dot) {dot} ; % 
@@ -42,7 +43,7 @@
   \factor[above=of w] {w-f} {left:$\mathcal{N}$} {mw,aw} {w} ; %
   \factor[above=of x] {x-f} {left:$\mathcal{N}$} {mx,ax} {x} ; %
   \factor[above=of t] {t-f} {left:$\mathcal{G}$} {at,bt} {t} ; %
-  \factor[above=of y] {y-f} {left:$\mathcal{N}$} {dot,t} {y} ; %
+  \factoredge {dot,t} {y-f} {y} ; %
 
   % Connect w and x to the dot node
   \edge[-] {w,x} {dot} ;
