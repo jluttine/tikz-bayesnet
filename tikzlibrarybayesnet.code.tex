@@ -1,11 +1,14 @@
+% tikzlibrary.code.tex
+%
+% Copyright 2010-2011 by Laura Dietz
 % Copyright 2012 by Jaakko Luttinen
 %
 % This file may be distributed and/or modified
 %
 % 1. under the LaTeX Project Public License and/or
-% 2. under the GNU Public License.
+% 2. under the GNU General Public License.
 %
-% See the file doc/generic/pgf/licenses/LICENSE for more details.
+% See the files LICENSE_LPPL and LICENSE_GPL for more details.
 
 % Load other libraries
 \usetikzlibrary{shapes}
@@ -22,7 +25,7 @@ minimum size=20pt, font=\fontsize{10}{10}\selectfont, node distance=1]
 \tikzstyle{const} = [rectangle, inner sep=0pt, node distance=1]
 % Factor node
 \tikzstyle{factor} = [rectangle, fill=black,minimum size=5pt, inner
-sep=0pt, node distance=0.4, font=\small]
+sep=0pt, node distance=0.4]
 % Deterministic node
 \tikzstyle{det} = [latent, diamond]
 
@@ -51,13 +54,12 @@ below left=5pt and 0pt of #1.south east] %
   % Connect all nodes #2 to all nodes #4 via all factors #3.
   \foreach \f in {#3} { %
     \foreach \x in {#2} { %
-      \draw[-,#1] (\x) edge[-] (\f) ;%
+      \draw[-,#1] (\x) edge[-] (\f) ; %
     } ;
     \foreach \y in {#4} { %
-      \draw[->,#1] (\f) -- (\y) ;%
+      \draw[->,#1] (\f) -- (\y) ; %
     } ;
   } ;
-  %\draw[<-,#1] (#2) -- (#2-factor) edge[-] (#3) ;
 }
 
 % \edge [options] {inputs} {outputs}
@@ -70,9 +72,13 @@ below left=5pt and 0pt of #1.south east] %
   } ;
 }
 
-% \factor [options] {name} {caption}
-\newcommand{\factor}[3][]{ %
-  \node[factor, label={[name=#2-caption]#3}, #1] (#2) {} ;  %
+% \factor [options] {name} {caption} {inputs} {outputs}
+\newcommand{\factor}[5][]{ %
+  % Draw the factor node. Use alias to allow empty names.
+  \node[factor, label={[name=#2-caption]#3}, name=#2, #1,
+  alias=#2-alias] {} ; %
+  % Connect all inputs to outputs via this factor
+  \factoredge {#4} {#2-alias} {#5} ; %
 }
 
 % \plate [options] {name} {fitlist} {caption}

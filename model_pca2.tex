@@ -1,16 +1,14 @@
-%% model_pca2.tex
-%% Copyright (C) 2012 Jaakko Luttinen
+% model_pca2.tex
 %
-% This work may be distributed and/or modified under the conditions of
-% the LaTeX Project Public License, either version 1.3 of this license
-% or (at your option) any later version.  The license is in the file
-% LICENSE and the latest version of this license is in
-% http://www.latex-project.org/lppl.txt and version 1.3 or later is
-% part of all distributions of LaTeX version 2005/12/01 or later.
+% Copyright (C) 2010,2011 Laura Dietz
+% Copyright (C) 2012 Jaakko Luttinen
 %
-% This work has the LPPL maintenance status `maintained'.
-% 
-% The Current Maintainer of this work is Jaakko Luttinen.
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU General Public License.
+%
+% See the files LICENSE_LPPL and LICENSE_GPL for more details.
 
 % PCA model
 
@@ -21,46 +19,45 @@
 
   % Y
   \node[obs]          (y)   {$y$}; %
-  \factor[above=of y] {y-f} {left:$\mathcal{N}$} ; %
+  \factor[above=of y] {y-f} {left:$\mathcal{N}$} {} {} ; %
 
   % W and X
-  \node[det, above=of y-f]                  (wx) {dot} ; % 
-  \node[latent, above=of wx, xshift=-1.5cm] (w)  {$\mathbf{w}$}; %
-  \node[latent, above=of wx, xshift=1.5cm]  (x)  {$\mathbf{x}$}; %
+  \node[det, above=of y]            (dot) {dot} ; % 
+  \node[latent, above left=1.2 of dot]  (w)   {$\mathbf{w}$}; %
+  \node[latent, above right=1.2 of dot] (x)   {$\mathbf{x}$}; %
 
-  % W hyper
+  % W hyperparameters
   \node[const, above=1.2 of w, xshift=-0.5cm] (mw) {$\mu_w$} ; %
   \node[const, above=1.2 of w, xshift=0.5cm]  (aw) {$\alpha_w$} ; %
-  \factor[above=of w] {w-f} {left:$\mathcal{N}$} ; %
-  \factoredge {mw,aw} {w-f} {w} ;
 
-  % X hyper
+  % X hyperparameters
   \node[const, above=1.2 of x, xshift=-0.5cm] (mx) {$\mu_x$} ; %
   \node[const, above=1.2 of x, xshift=0.5cm]  (ax) {$\alpha_x$} ; %
-  \factor[above=of x] {x-f} {left:$\mathcal{N}$} ; %
-  \factoredge {mx,ax} {x-f} {x} ;
 
   % noise
-  \node[latent, right=3cm of y-f]         (t)   {$\tau$}; %
-  \factor[above=of t]                     {t-f} {left:$\mathcal{G}$}; %
+  \node[latent, right=2.5cm of y-f]         (t)   {$\tau$}; %
   \node[const, above=of t, xshift=-0.5cm] (at)  {$\alpha_\tau$} ; %
   \node[const, above=of t, xshift=0.5cm]  (bt)  {$\beta_\tau$} ; %
-  \factoredge {at,bt} {t-f} {t} ; %
 
-  % Connect the nodes
-  \edge[-] {w,x} {wx} ;
-  \factoredge {wx,t} {y-f} {y} ; %
+  % Factors
+  \factor[above=of w] {w-f} {left:$\mathcal{N}$} {mw,aw} {w} ; %
+  \factor[above=of x] {x-f} {left:$\mathcal{N}$} {mx,ax} {x} ; %
+  \factor[above=of t] {t-f} {left:$\mathcal{G}$} {at,bt} {t} ; %
+  \factoredge {dot,t} {y-f} {y} ; %
+
+  % Connect w and x to the dot node
+  \edge[-] {w,x} {dot} ;
 
   % Plates
   \plate {yx} { %
     (y)(y-f)(y-f-caption) %
     (x)(x-f)(x-f-caption) %
-    (wx) %
+    (dot) %
   } {$N$} ;
   \plate {} {%
     (y)(y-f)(y-f-caption) %
     (w)(w-f)(w-f-caption) %
-    (wx) %
+    (dot) %
     (yx.north west)(yx.south west) %
   } {$M$} ;
 

@@ -1,17 +1,14 @@
-%% example.tex
-%% Copyright (C) 2010,2011 Laura Dietz
-%% Copyright (C) 2012 Jaakko Luttinen
+% example.tex
 %
-% This work may be distributed and/or modified under the conditions of
-% the LaTeX Project Public License, either version 1.3 of this license
-% or (at your option) any later version.  The license is in the file
-% LICENSE and the latest version of this license is in
-% http://www.latex-project.org/lppl.txt and version 1.3 or later is
-% part of all distributions of LaTeX version 2005/12/01 or later.
+% Copyright (C) 2010,2011 Laura Dietz
+% Copyright (C) 2012 Jaakko Luttinen
 %
-% This work has the LPPL maintenance status `maintained'.
-% 
-% The Current Maintainer of this work is Jaakko Luttinen.
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU General Public License.
+%
+% See the files LICENSE_LPPL and LICENSE_GPL for more details.
 
 \documentclass[a4paper]{article}
 
@@ -27,7 +24,7 @@
 \maketitle
 
 TikZ examples for graphical models (Bayesian networks) and directed
-factor graphs.
+factor graphs \cite{Dietz:2010}.
 
 % A table of node types
 \begin{table}[ht]
@@ -73,7 +70,7 @@ factor graphs.
         \node[obs] (y) {$y$} ; %
         \node[latent, left=of y, yshift=0.5cm] (mu) {$\mu$} ; %
         \node[latent, left=of y, yshift=-0.5cm] (tau) {$\tau$} ; %
-        \factor[left=of y] {y-factor} {$\mathcal{N}$} ;
+        \factor[left=of y] {y-factor} {$\mathcal{N}$} {} {};
         \factoredge {mu,tau} {y-factor} {y} ; %
       }
       \\
@@ -90,10 +87,11 @@ factor graphs.
         % Nodes
         \node[obs]                    (k)   {$k$}; %
         \node[latent, above=2 of k]   (l)   {$\lambda$}; %
-        \factor[above=0.8 of k]       {k-f} {Multi} ; %
-        \node[latent, right=of k-f]   (p)   {$\phi$}; %
+        \factor[above=0.8 of k]       {k-f} {Multi} {} {}; %
+        \node[latent, right=of k-f]   (paa) {$\phi$}; %
+        %\node[latent, right=of k-f]   (p)   {$\phi$}; %
         % Connections
-        \factoredge {p} {k-f} {k} ; %
+        \factoredge {paa} {k-f} {k} ; %
         % Gate
         \gate {} {(k-f)(k-f-caption)} {l} ; %
       }
@@ -127,9 +125,30 @@ factor graphs.
   \begin{center}
     \input{model_citation_influence}
   \end{center}
-  \caption{Citation influence model with own topics as directed factor
-    graph.}
+  \caption{Citation influence model with own topics \cite{Dietz:2007}
+    as directed factor graph.}
 \end{figure}
+
+\clearpage
+
+\begin{thebibliography}{9}
+
+\bibitem{Dietz:2010}
+  Laura Dietz,
+  \emph{Directed Factor Graph Notation for Generative Models}.
+  Technical Report. 2010
+
+% Laura Dietz, Steffen Bickel, Tobias Scheffer. 
+% Unsupervised Prediction of Citation Influences. 
+% In: Proceedings of International Conference on Machine Learning. 2007
+\bibitem{Dietz:2007}
+  Laura Dietz, Steffen Bickel, Tobias Scheffer,
+  \emph{Unsupervised Prediction of Citation Influences}.
+  In: Proceedings of International Conference on Machine
+  Learning. 2007
+
+
+\end{thebibliography}
 
 \end{document}
 
