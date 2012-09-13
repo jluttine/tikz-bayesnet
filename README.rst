@@ -66,14 +66,12 @@ Example
 -------
 
 .. figure:: http://i.imgur.com/CzNyk.png
-   :scale: 50 %
    :align: center
    :alt: Bayesian network.
 
    PCA model as a Bayesian network and a directed factor graph.
 
 .. figure:: http://i.imgur.com/CBZqL.png
-   :scale: 50 %
    :align: center
    :alt: Citation influence model
 
