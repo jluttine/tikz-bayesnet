@@ -49,14 +49,14 @@ Install the package by copying tikzlibrarybayesnet.code.tex to your
 LaTeX system or copy the file into projects that are using it.  To use
 the library in your LaTeX file
 
-.. code-block::
+.. code-block:: python
 
    \usepackage{tikz}
    \usetikzlibrary{bayesnet}
 
 Compile the LaTeX example:
 
-.. code-block::
+.. code-block:: none
 
    pdflatex example.tex
 
