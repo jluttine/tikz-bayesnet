@@ -1,7 +1,7 @@
 BayesNet
 ========
 
-TikZ library for drawing Bayesian networks and (directed) factor
+TikZ library for drawing Bayesian networks, graphical models and (directed) factor
 graphs in LaTeX.
 
 Contents
