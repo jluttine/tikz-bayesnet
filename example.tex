@@ -63,9 +63,36 @@ factor graphs \cite{Dietz:2010}.
       \tikz{ %
         \node[factor] [label=$\mathcal{N}$] {}; %
       }
+    \end{tabular}
+  \end{center}
+\end{table}
+\begin{table}[ht]
+  \caption{Edge types}
+  \begin{center}
+    \begin{tabular}{llc}
+      Type & Syntax & Output
       \\
-      Factor with nodes &
-      &
+      \hline
+      Directed edges &
+      \texttt{\textbackslash edge[opts]\{inputs\}\{outputs\}} &
+      \tikz{ %
+        \node[obs] (y) {$y$} ; %
+        \node[latent, left=of y, yshift=0.5cm] (mu) {$\mu$} ; %
+        \node[latent, left=of y, yshift=-0.5cm] (tau) {$\tau$} ; %
+        \edge {mu,tau} {y} ; %
+      }
+      \\
+      Undirected edges &
+      \texttt{\textbackslash edge[-,opts]\{inputs\}\{outputs\}} &
+      \tikz{ %
+        \node[obs] (y) {$y$} ; %
+        \node[latent, left=of y, yshift=0.5cm] (mu) {$\mu$} ; %
+        \node[latent, left=of y, yshift=-0.5cm] (tau) {$\tau$} ; %
+        \edge[-] {mu,tau} {y} ; %
+      }
+      \\
+      Factor graph edges &
+      \texttt{\textbackslash factoredge[opts]\{inputs\}\{via\}\{outputs\}} &
       \tikz{ %
         \node[obs] (y) {$y$} ; %
         \node[latent, left=of y, yshift=0.5cm] (mu) {$\mu$} ; %
@@ -73,7 +100,16 @@ factor graphs \cite{Dietz:2010}.
         \factor[left=of y] {y-factor} {$\mathcal{N}$} {} {};
         \factoredge {mu,tau} {y-factor} {y} ; %
       }
+    \end{tabular}
+  \end{center}
+\end{table}
+\begin{table}[ht]
+  \caption{Utilities}
+  \begin{center}
+    \begin{tabular}{llc}
+      Type & Syntax & Output
       \\
+      \hline
       Plate &
       \texttt{\textbackslash plate} &
       \tikz{ %
