@@ -54,10 +54,12 @@ below left=5pt and 0pt of #1.south east] %
   % Connect all nodes #2 to all nodes #4 via all factors #3.
   \foreach \f in {#3} { %
     \foreach \x in {#2} { %
-      \draw[-,#1] (\x) edge[-] (\f) ; %
+      \path (\x) edge[-,#1] (\f) ; %
+      %\draw[-,#1] (\x) edge[-] (\f) ; %
     } ;
     \foreach \y in {#4} { %
-      \draw[->,#1] (\f) -- (\y) ; %
+      \path (\f) edge[->,#1] (\y) ; %
+      %\draw[->,#1] (\f) -- (\y) ; %
     } ;
   } ;
 }
@@ -67,7 +69,8 @@ below left=5pt and 0pt of #1.south east] %
   % Connect all nodes #2 to all nodes #3.
   \foreach \x in {#2} { %
     \foreach \y in {#3} { %
-      \draw[->,#1] (\x) -- (\y) ;%
+      \path (\x) edge [->,#1] (\y) ;%
+      %\draw[->,#1] (\x) -- (\y) ;%
     } ;
   } ;
 }
