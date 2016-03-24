@@ -83,7 +83,8 @@ Related projects
 
 This library is derived from a technical report "Directed Factor Graph
 Notation for Generative Models" and the accompanying TikZ macros by
-Laura Dietz 2010 (http://people.cs.umass.edu/~dietz/).
+Laura Dietz 2010 (http://people.cs.umass.edu/~dietz/).  The technical
+report is available in this repository as `dietz-techreport.pdf`.
 
 GraphViz (http://www.graphviz.org/) is a more general open source
 graph visualization software.  It uses DOT file format to describe the
