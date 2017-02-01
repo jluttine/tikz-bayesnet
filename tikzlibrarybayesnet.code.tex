@@ -40,8 +40,6 @@ below left=5pt and 0pt of #1.south east] %
 \tikzstyle{factor caption} = [caption] %
 \tikzstyle{every label} += [caption] %
 
-\tikzset{>={triangle 45}}
-
 %\pgfdeclarelayer{b}
 %\pgfdeclarelayer{f}
 %\pgfsetlayers{b,main,f}
@@ -55,7 +53,7 @@ below left=5pt and 0pt of #1.south east] %
       %\draw[-,#1] (\x) edge[-] (\f) ; %
     } ;
     \foreach \y in {#4} { %
-      \path (\f) edge[->,#1] (\y) ; %
+      \path (\f) edge[->, >={triangle 45}, #1] (\y) ; %
       %\draw[->,#1] (\f) -- (\y) ; %
     } ;
   } ;
@@ -66,7 +64,7 @@ below left=5pt and 0pt of #1.south east] %
   % Connect all nodes #2 to all nodes #3.
   \foreach \x in {#2} { %
     \foreach \y in {#3} { %
-      \path (\x) edge [->,#1] (\y) ;%
+      \path (\x) edge [->, >={triangle 45}, #1] (\y) ;%
       %\draw[->,#1] (\x) -- (\y) ;%
     } ;
   } ;
@@ -137,4 +135,3 @@ below left=5pt and 0pt of #1.south east] %
     \draw [-*,thick] (\x) -- (#1); %
   } ;%
 }
-
